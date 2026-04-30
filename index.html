@@ -875,6 +875,24 @@
   }
 
   .comment-count svg { width: 11px; height: 11px; }
+
+  /* TAB NAVIGATION */
+  .tab-btn {
+    padding: 10px 16px;
+    border: none;
+    background: none;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--text-primary); }
+  .tab-btn.active { color: var(--text-primary); border-bottom-color: var(--text-primary); }
+  .tab-content { }
 </style>
 </head>
 <body>
@@ -933,47 +951,63 @@
     </div>
   </div>
 
-  <!-- WORKFLOW BAR -->
-  <div class="workflow-bar">
-    <div class="workflow-step">
-      <span class="workflow-step-num">1</span>
-      Intake &amp; Triage
+  <!-- STAGE DROPDOWN + TAB NAV -->
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+    <!-- Stage Dropdown Badge -->
+    <div style="position:relative; display:inline-block;">
+      <div id="stage-badge" onclick="toggleStageDropdown()" style="display:inline-flex; align-items:center; gap:6px; padding:5px 10px; background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-border); border-radius:6px; font-size:12px; font-weight:500; cursor:pointer; user-select:none;">
+        <span>Stage 2 — Risk &amp; Control Review</span>
+        <svg id="stage-chevron" style="width:13px;height:13px;transition:transform 0.2s;" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+      </div>
+      <div id="stage-dropdown" style="display:none; position:absolute; top:calc(100% + 4px); left:0; background:var(--surface); border:1px solid var(--border); border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.08); z-index:100; min-width:240px; overflow:hidden;">
+        <div style="padding:6px 0;">
+          <div class="stage-option" style="padding:8px 14px; font-size:12px; display:flex; align-items:center; gap:10px; color:var(--text-secondary); cursor:default;">
+            <span style="width:18px;height:18px;background:var(--green);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;">✓</span>
+            <span>Stage 1 — Intake &amp; Triage</span>
+          </div>
+          <div class="stage-option active-stage" style="padding:8px 14px; font-size:12px; display:flex; align-items:center; gap:10px; background:var(--blue-bg); color:var(--blue); cursor:default;">
+            <span style="width:18px;height:18px;background:var(--blue);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;">2</span>
+            <span style="font-weight:600;">Stage 2 — Risk &amp; Control Review</span>
+          </div>
+          <div class="stage-option" style="padding:8px 14px; font-size:12px; display:flex; align-items:center; gap:10px; color:var(--text-muted); cursor:default;">
+            <span style="width:18px;height:18px;background:var(--border);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--text-muted);flex-shrink:0;">3</span>
+            <span>Stage 3 — Operational Readiness</span>
+          </div>
+          <div class="stage-option" style="padding:8px 14px; font-size:12px; display:flex; align-items:center; gap:10px; color:var(--text-muted); cursor:default;">
+            <span style="width:18px;height:18px;background:var(--border);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--text-muted);flex-shrink:0;">4</span>
+            <span>Stage 4 — Committee Decision</span>
+          </div>
+          <div class="stage-option" style="padding:8px 14px; font-size:12px; display:flex; align-items:center; gap:10px; color:var(--text-muted); cursor:default;">
+            <span style="width:18px;height:18px;background:var(--border);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--text-muted);flex-shrink:0;">5</span>
+            <span>Stage 5 — Conditional Approval</span>
+          </div>
+          <div class="stage-option" style="padding:8px 14px; font-size:12px; display:flex; align-items:center; gap:10px; color:var(--text-muted); cursor:default;">
+            <span style="width:18px;height:18px;background:var(--border);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--text-muted);flex-shrink:0;">6</span>
+            <span>Stage 6 — Launch &amp; Monitoring</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <span class="workflow-arrow">→</span>
-    <div class="workflow-step active">
-      <span class="workflow-step-num">2</span>
-      Risk &amp; Control Review
-    </div>
-    <span class="workflow-arrow">→</span>
-    <div class="workflow-step">
-      <span class="workflow-step-num">3</span>
-      Operational Readiness
-    </div>
-    <span class="workflow-arrow">→</span>
-    <div class="workflow-step">
-      <span class="workflow-step-num">4</span>
-      Committee Decision
-    </div>
-    <span class="workflow-arrow">→</span>
-    <div class="workflow-step">
-      <span class="workflow-step-num">5</span>
-      Conditional Approval
-    </div>
-    <span class="workflow-arrow">→</span>
-    <div class="workflow-step">
-      <span class="workflow-step-num">6</span>
-      Launch &amp; Monitoring
+    <!-- Gated Action Buttons -->
+    <div style="display:flex; gap:8px; align-items:center;">
+      <span style="font-size:11px; color:var(--text-muted); margin-right:4px;" id="action-lock-msg">🔒 2 critical items must be resolved to approve</span>
+      <button class="btn btn-approve" id="btn-approve" disabled style="opacity:0.4;cursor:not-allowed;">✓ Approve</button>
+      <button class="btn btn-escalate" id="btn-escalate">↑ Escalate</button>
+      <button class="btn btn-reject" id="btn-reject">✕ Reject</button>
+      <button class="btn btn-request" id="btn-request">⟳ Request Info</button>
     </div>
   </div>
 
-  <!-- ACTION BAR -->
-  <div class="action-bar">
-    <span class="action-bar-label">Stage 2 review in progress — 6 outstanding items require resolution before committee submission.</span>
-    <button class="btn btn-approve">✓ Approve</button>
-    <button class="btn btn-escalate">↑ Escalate</button>
-    <button class="btn btn-reject">✕ Reject</button>
-    <button class="btn btn-request">⟳ Request Info</button>
+  <!-- TAB NAVIGATION -->
+  <div style="display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:28px;">
+    <button class="tab-btn active" onclick="switchTab('overview', this)">Overview</button>
+    <button class="tab-btn" onclick="switchTab('regulatory', this)">Regulatory Applicability</button>
+    <button class="tab-btn" onclick="switchTab('intake', this)">Team-by-Team Review</button>
+    <button class="tab-btn" onclick="switchTab('outstanding', this)">Outstanding Items <span id="outstanding-count" style="background:var(--red);color:white;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:4px;">6</span></button>
   </div>
+
+  <!-- TAB: OVERVIEW -->
+  <div id="tab-overview" class="tab-content">
 
   <!-- OVERALL ASSESSMENT -->
   <div class="section">
@@ -989,63 +1023,57 @@
     <div class="decision-banner">
       <div class="decision-banner-icon">⚠</div>
       <div>
-        <div class="decision-banner-title">Decision: Approve with Conditions</div>
-        <div class="decision-banner-text">The MS Emerging Markets ESG ETF presents a manageable risk profile. SEC registration under the Securities Act of 1933 and Investment Company Act of 1940 is required and in scope. FINRA suitability and Reg BI obligations apply to distribution channels. Open items are operational — ESG methodology documentation, counterparty risk controls, FINRA marketing review, and product governance sign-off — rather than fundamental regulatory barriers. Advance to Stage 2 with conditions.</div>
+        <div class="decision-banner-title">Recommendation: Approve with Conditions</div>
+        <div class="decision-banner-text">The MS Emerging Markets ESG ETF presents a manageable risk profile. SEC registration under the Securities Act of 1933 and Investment Company Act of 1940 is required and in scope. FINRA suitability and Reg BI obligations apply to distribution channels. Open items are operational — ESG methodology documentation, counterparty risk controls, FINRA marketing review, and product governance sign-off — rather than fundamental regulatory barriers. Advance to Stage 3 with conditions.</div>
       </div>
     </div>
 
-    <div class="section-title" style="font-size:13px; margin-bottom:12px;">Assessment by Team</div>
-    <div class="team-scores">
-      <div class="team-score-row">
-        <div class="team-score-header">
-          <span class="team-score-name">Legal &amp; Regulatory</span>
-          <span class="team-score-value">78/100</span>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" style="width:78%"></div></div>
-        <div class="team-score-desc">SEC registration and FINRA suitability triggered; product classification and prospectus requirements in scope but manageable</div>
+    <!-- Assessment by Team — collapsible -->
+    <div style="border:1px solid var(--border); border-radius:8px; overflow:hidden; background:var(--surface);">
+      <div onclick="toggleAssessment()" style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; cursor:pointer; user-select:none;" id="assessment-header">
+        <span style="font-size:13px; font-weight:600;">Assessment by Team</span>
+        <svg id="assessment-chevron" class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
       </div>
-      <div class="team-score-row">
-        <div class="team-score-header">
-          <span class="team-score-name">Risk Management</span>
-          <span class="team-score-value">70/100</span>
+      <div id="assessment-body" style="display:none; padding:16px; border-top:1px solid var(--border-light);">
+        <div class="team-scores">
+          <div class="team-score-row">
+            <div class="team-score-header"><span class="team-score-name">Legal &amp; Regulatory</span><span class="team-score-value">78/100</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:78%"></div></div>
+            <div class="team-score-desc">SEC registration and FINRA suitability triggered; product classification and prospectus requirements in scope but manageable</div>
+          </div>
+          <div class="team-score-row">
+            <div class="team-score-header"><span class="team-score-name">Risk Management</span><span class="team-score-value">70/100</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+            <div class="team-score-desc">Emerging markets exposure introduces liquidity and currency risk; counterparty controls not yet fully defined</div>
+          </div>
+          <div class="team-score-row">
+            <div class="team-score-header"><span class="team-score-name">Operations</span><span class="team-score-value">72/100</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div>
+            <div class="team-score-desc">Trade capture, settlement, and NAV calculation workflows require validation before launch</div>
+          </div>
+          <div class="team-score-row">
+            <div class="team-score-header"><span class="team-score-name">Compliance</span><span class="team-score-value">68/100</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div>
+            <div class="team-score-desc">ESG disclosure framework and marketing review not yet evidenced; supervisory controls required before pilot</div>
+          </div>
+          <div class="team-score-row">
+            <div class="team-score-header"><span class="team-score-name">ESG &amp; Sustainable Investing</span><span class="team-score-value">65/100</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:65%"></div></div>
+            <div class="team-score-desc">ESG methodology and data sourcing not yet fully documented; greenwashing risk requires independent validation and SEC-aligned disclosure framework</div>
+          </div>
+          <div class="team-score-row">
+            <div class="team-score-header"><span class="team-score-name">Product Governance</span><span class="team-score-value">74/100</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:74%"></div></div>
+            <div class="team-score-desc">Target market definition and distributor suitability criteria require sign-off; product complexity disclosure not yet drafted</div>
+          </div>
         </div>
-        <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
-        <div class="team-score-desc">Emerging markets exposure introduces liquidity and currency risk; counterparty controls not yet fully defined</div>
-      </div>
-      <div class="team-score-row">
-        <div class="team-score-header">
-          <span class="team-score-name">Operations</span>
-          <span class="team-score-value">72/100</span>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div>
-        <div class="team-score-desc">Trade capture, settlement, and NAV calculation workflows require validation before launch</div>
-      </div>
-      <div class="team-score-row">
-        <div class="team-score-header">
-          <span class="team-score-name">Compliance</span>
-          <span class="team-score-value">68/100</span>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div>
-        <div class="team-score-desc">ESG disclosure framework and marketing review not yet evidenced; supervisory controls required before pilot</div>
-      </div>
-      <div class="team-score-row">
-        <div class="team-score-header">
-          <span class="team-score-name">ESG &amp; Sustainable Investing</span>
-          <span class="team-score-value">65/100</span>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" style="width:65%"></div></div>
-        <div class="team-score-desc">ESG methodology and data sourcing not yet fully documented; greenwashing risk requires independent validation and SEC-aligned disclosure framework</div>
-      </div>
-      <div class="team-score-row">
-        <div class="team-score-header">
-          <span class="team-score-name">Product Governance</span>
-          <span class="team-score-value">74/100</span>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" style="width:74%"></div></div>
-        <div class="team-score-desc">Target market definition and distributor suitability criteria require sign-off; product complexity disclosure not yet drafted</div>
       </div>
     </div>
   </div>
+  </div><!-- end tab-overview -->
+
+  <!-- TAB: REGULATORY -->
+  <div id="tab-regulatory" class="tab-content" style="display:none;">
 
   <!-- REGULATORY APPLICABILITY -->
   <div class="section">
@@ -1221,10 +1249,12 @@
       </div>
     </div>
   </div>
+  </div><!-- end tab-regulatory -->
 
+  <!-- TAB: INTAKE -->
+  <div id="tab-intake" class="tab-content" style="display:none;">
   <!-- INTAKE COMPLETENESS -->
   <div class="section">
-    <div class="section-title">Intake Completeness</div>
     <div class="intake-cards">
       <div class="intake-card">
         <div class="intake-card-label">Total Questions</div>
@@ -1240,7 +1270,10 @@
       </div>
     </div>
   </div>
+  </div><!-- end tab-intake -->
 
+  <!-- TAB: TEAM REVIEW (merged into intake tab via JS) -->
+  <div id="tab-team-review" class="tab-content" style="display:none;">
   <!-- TEAM BY TEAM REVIEW -->
   <div class="section">
     <div class="section-title">Team-by-Team Review</div>
@@ -1714,73 +1747,143 @@
       </div>
     </div>
   </div>
+  </div><!-- end tab-team-review -->
 
-  <!-- OUTSTANDING ITEMS -->
+  <!-- TAB: OUTSTANDING ITEMS -->
+  <div id="tab-outstanding" class="tab-content" style="display:none;">
   <div class="section">
     <div class="outstanding-header">
       <div class="section-title">Outstanding Items</div>
-      <span class="badge badge-red">6 Open</span>
+      <span class="badge badge-red" id="open-count-badge">6 Open</span>
     </div>
-    <div class="section-subtitle">Items requiring resolution before Stage 2 committee submission.</div>
+    <div class="section-subtitle">Items requiring resolution before Stage 3. Resolving all Critical items will unlock the Approve action.</div>
 
-    <div class="outstanding-item critical">
+    <!-- Item 1 - Critical -->
+    <div class="outstanding-item critical" id="oi-0">
       <div class="outstanding-item-top">
-        <span class="badge badge-red">Critical</span>
-        <span style="font-size:11px;color:var(--text-muted);">Due: Stage 2 — Before Committee Submission</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" id="check-0" onchange="handleCheck(0)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--green);">
+          <span class="badge badge-red">Critical</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--text-muted);">Due: Stage 3 — Before Committee Submission</span>
+          <button onclick="showRouteModal('ESG &amp; Sustainable Investing', 'Complete ESG methodology documentation and independent validation')" class="btn btn-request" style="font-size:11px;padding:4px 10px;">↗ Route to Owner</button>
+        </div>
       </div>
       <div class="outstanding-item-desc">Provide complete ESG methodology documentation including data sources (MSCI, Sustainalytics), index construction rules, scoring framework, exclusion criteria, and independent validation evidence.</div>
       <div class="outstanding-item-meta"><strong>Why This Matters:</strong> SEC Names Rule and ESG disclosure requirements mandate full methodology transparency. Cannot proceed to SEC registration filing without this documentation.</div>
       <div class="outstanding-item-meta"><strong>Owner:</strong> ESG &amp; Sustainable Investing</div>
     </div>
 
-    <div class="outstanding-item critical">
+    <!-- Item 2 - Critical -->
+    <div class="outstanding-item critical" id="oi-1">
       <div class="outstanding-item-top">
-        <span class="badge badge-red">Critical</span>
-        <span style="font-size:11px;color:var(--text-muted);">Due: Stage 2 — Before Committee Submission</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" id="check-1" onchange="handleCheck(1)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--green);">
+          <span class="badge badge-red">Critical</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--text-muted);">Due: Stage 3 — Before Committee Submission</span>
+          <button onclick="showRouteModal('Risk Management', 'Define counterparty concentration limits for emerging markets sub-custodian relationships')" class="btn btn-request" style="font-size:11px;padding:4px 10px;">↗ Route to Owner</button>
+        </div>
       </div>
       <div class="outstanding-item-desc">Define and document counterparty concentration limits for emerging markets sub-custodian relationships. Obtain Risk Management approval before any custody agreements are executed.</div>
       <div class="outstanding-item-meta"><strong>Why This Matters:</strong> Unresolved counterparty concentration risk is a fundamental control gap. Required before trading in emerging markets can commence.</div>
       <div class="outstanding-item-meta"><strong>Owner:</strong> Risk Management</div>
     </div>
 
-    <div class="outstanding-item high">
+    <!-- Item 3 - High -->
+    <div class="outstanding-item high" id="oi-2">
       <div class="outstanding-item-top">
-        <span class="badge badge-orange">High</span>
-        <span style="font-size:11px;color:var(--text-muted);">Due: Stage 2 — Before Distribution</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" id="check-2" onchange="handleCheck(2)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--green);">
+          <span class="badge badge-orange">High</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--text-muted);">Due: Stage 3 — Before Distribution</span>
+          <button onclick="showRouteModal('Compliance', 'Draft and submit all retail marketing materials for FINRA Rule 2210 review')" class="btn btn-request" style="font-size:11px;padding:4px 10px;">↗ Route to Owner</button>
+        </div>
       </div>
       <div class="outstanding-item-desc">Draft all retail marketing and sales materials and submit for FINRA Rule 2210 review. Obtain written Compliance approval before any distribution activity commences.</div>
       <div class="outstanding-item-meta"><strong>Why This Matters:</strong> Distribution of unapproved marketing materials constitutes a FINRA rule violation. ESG claims require particular care to avoid greenwashing characterization.</div>
       <div class="outstanding-item-meta"><strong>Owner:</strong> Compliance</div>
     </div>
 
-    <div class="outstanding-item high">
+    <!-- Item 4 - High -->
+    <div class="outstanding-item high" id="oi-3">
       <div class="outstanding-item-top">
-        <span class="badge badge-orange">High</span>
-        <span style="font-size:11px;color:var(--text-muted);">Due: Stage 2 — Before Committee Submission</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" id="check-3" onchange="handleCheck(3)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--green);">
+          <span class="badge badge-orange">High</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--text-muted);">Due: Stage 3 — Before Committee Submission</span>
+          <button onclick="showRouteModal('Legal &amp; Regulatory', 'Assign lead counsel and establish prospectus and SAI drafting timeline')" class="btn btn-request" style="font-size:11px;padding:4px 10px;">↗ Route to Owner</button>
+        </div>
       </div>
       <div class="outstanding-item-desc">Assign lead counsel and establish a prospectus and SAI drafting timeline with milestone dates. Confirm timeline is consistent with target launch date given SEC's 75-day review period.</div>
       <div class="outstanding-item-meta"><strong>Why This Matters:</strong> Securities Act registration cannot proceed without a finalized prospectus. Absence of a drafting timeline creates scheduling risk for the target launch date.</div>
       <div class="outstanding-item-meta"><strong>Owner:</strong> Legal &amp; Regulatory</div>
     </div>
 
-    <div class="outstanding-item high">
+    <!-- Item 5 - High -->
+    <div class="outstanding-item high" id="oi-4">
       <div class="outstanding-item-top">
-        <span class="badge badge-orange">High</span>
-        <span style="font-size:11px;color:var(--text-muted);">Due: Stage 2 — Before Launch</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" id="check-4" onchange="handleCheck(4)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--green);">
+          <span class="badge badge-orange">High</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--text-muted);">Due: Stage 3 — Before Launch</span>
+          <button onclick="showRouteModal('Risk Management', 'Submit liquidity risk management framework addressing SEC Rule 22e-4 requirements')" class="btn btn-request" style="font-size:11px;padding:4px 10px;">↗ Route to Owner</button>
+        </div>
       </div>
       <div class="outstanding-item-desc">Submit a liquidity risk management framework addressing SEC Rule 22e-4 requirements for the emerging markets mandate, including liquidity bucket classifications and minimum highly liquid investment percentage.</div>
       <div class="outstanding-item-meta"><strong>Why This Matters:</strong> Emerging markets liquidity risk is material and Rule 22e-4 compliance is mandatory for registered investment companies.</div>
       <div class="outstanding-item-meta"><strong>Owner:</strong> Risk Management</div>
     </div>
 
-    <div class="outstanding-item medium">
+    <!-- Item 6 - Medium -->
+    <div class="outstanding-item medium" id="oi-5">
       <div class="outstanding-item-top">
-        <span class="badge badge-yellow">Medium</span>
-        <span style="font-size:11px;color:var(--text-muted);">Due: Stage 2 — Scope Confirmation</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" id="check-5" onchange="handleCheck(5)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--green);">
+          <span class="badge badge-yellow">Medium</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--text-muted);">Due: Stage 3 — Scope Confirmation</span>
+          <button onclick="showRouteModal('Product Governance', 'Draft product complexity disclosure document for distributor communications')" class="btn btn-request" style="font-size:11px;padding:4px 10px;">↗ Route to Owner</button>
+        </div>
       </div>
       <div class="outstanding-item-desc">Draft and obtain Product Governance sign-off on the product complexity disclosure document for use in distributor communications and advisor training materials.</div>
       <div class="outstanding-item-meta"><strong>Why This Matters:</strong> Product Governance sign-off on the complexity disclosure is required before distributor onboarding commences.</div>
       <div class="outstanding-item-meta"><strong>Owner:</strong> Product Governance</div>
+    </div>
+
+  </div>
+  </div><!-- end tab-outstanding -->
+
+  <!-- ROUTE TO OWNER MODAL -->
+  <div id="route-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:var(--surface); border-radius:12px; padding:24px; width:380px; box-shadow:0 8px 32px rgba(0,0,0,0.16);">
+      <div style="font-size:15px; font-weight:600; margin-bottom:4px;">Route to Owner</div>
+      <div style="font-size:12px; color:var(--text-secondary); margin-bottom:16px;">This item will be assigned and a notification sent to the owner.</div>
+      <div style="margin-bottom:12px;">
+        <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:4px;">Owner</div>
+        <div id="modal-owner" style="font-size:13px; font-weight:500; padding:8px 12px; background:var(--bg); border-radius:6px; border:1px solid var(--border);"></div>
+      </div>
+      <div style="margin-bottom:20px;">
+        <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:4px;">Action Required</div>
+        <div id="modal-action" style="font-size:12px; color:var(--text-secondary); padding:8px 12px; background:var(--bg); border-radius:6px; border:1px solid var(--border); line-height:1.5;"></div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:4px;">Note (optional)</div>
+        <input type="text" placeholder="Add a note for the owner..." style="width:100%; padding:8px 12px; border:1px solid var(--border); border-radius:6px; font-size:12px; font-family:'IBM Plex Sans',sans-serif; outline:none; color:var(--text-primary);">
+      </div>
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button onclick="closeRouteModal()" class="btn btn-request">Cancel</button>
+        <button onclick="confirmRoute()" class="btn btn-approve">Send Notification</button>
+      </div>
     </div>
   </div>
 
@@ -2014,11 +2117,11 @@
       <div class="review-item" onclick="toggleReviewItem(4, this)">
         <div class="review-item-header">
           <div class="review-icon"></div>
-          <div class="review-item-name">Overall Decision (Norm Ai Summary)</div>
+          <div class="review-item-name">Recommended Decision</div>
           <svg class="chevron" style="flex-shrink:0;margin-left:4px;" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
         </div>
         <div class="review-item-footer">
-          <span class="badge badge-green">Approved</span>
+          <span class="badge badge-blue">Approve with Conditions</span>
           <span class="comment-count"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12v8H9l-3 3v-3H2z"/></svg> 0</span>
         </div>
       </div>
@@ -2029,7 +2132,7 @@
           Action Items
         </div>
         <ul class="review-action-list">
-          <li>Decision: APPROVED WITH CONDITIONS. Advance to Stage 2 (Risk &amp; Control Review and Operational Readiness).</li>
+          <li>Recommendation: APPROVE WITH CONDITIONS. Recommending advancement to Stage 3 (Operational Readiness) pending resolution of outstanding items. Final approval authority rests with the NPA Committee.</li>
           <li>Six condition packages must be satisfied before Stage 2 committee submission: Legal (prospectus timeline and counsel assignment), ESG (methodology documentation and independent validation), Risk Management (counterparty limits and liquidity framework), Compliance (marketing materials and supervisory framework sign-off), Operations (settlement workflow validation), and Product Governance (complexity disclosure).</li>
         </ul>
       </div>
@@ -2042,7 +2145,7 @@
           <svg class="chevron open" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
         </div>
         <div class="review-explanation-body">
-          <p><strong>Why This Product Is Approved:</strong> The MS Emerging Markets ESG ETF is aligned with Morgan Stanley Investment Management's strategic objective of expanding its sustainable investing product range. The regulatory analysis is favorable: the fund is a standard registered ETF with well-understood registration requirements, no CFTC commodity pool obligations, and no current state-level prohibition on distribution. Morgan Stanley's existing investment management infrastructure substantially supports the fund's operational requirements. No regulatory framework currently prohibits this product.</p>
+          <p><strong>Why Norm Ai Recommends Approval:</strong> The MS Emerging Markets ESG ETF is aligned with Morgan Stanley Investment Management's strategic objective of expanding its sustainable investing product range. The regulatory analysis is favorable: the fund is a standard registered ETF with well-understood registration requirements, no CFTC commodity pool obligations, and no current state-level prohibition on distribution. Morgan Stanley's existing investment management infrastructure substantially supports the fund's operational requirements. No regulatory framework currently prohibits this product.</p>
           <p><strong>Why Conditions Are Required:</strong> The open items are operational, not fundamental regulatory barriers. The ESG methodology documentation and independent validation must be completed because SEC disclosure requirements are non-negotiable and greenwashing risk is material for this product type. The counterparty concentration limits and liquidity risk management framework are fundamental risk controls required before trading can commence. The marketing materials and supervisory framework must be in place before any distribution activity. These conditions are achievable and do not require changes to the product's fundamental design.</p>
           <p><strong>Scope Dependency:</strong> This approval is predicated on the current scope of the product: an ESG-screened emerging markets equity ETF using MSCI and Sustainalytics data, distributed through Morgan Stanley's broker-dealer network, without derivatives exposure above the CFTC de minimis threshold. Any material expansion — to include derivatives, impact investing components, additional distribution channels, or a change in ESG data providers — requires re-review before implementation in the expanded scope.</p>
         </div>
@@ -2126,20 +2229,101 @@
     }
   }
 
-  // Workflow step click
-  document.querySelectorAll('.workflow-step').forEach(step => {
-    step.addEventListener('click', function() {
-      document.querySelectorAll('.workflow-step').forEach(s => s.classList.remove('active'));
-      this.classList.add('active');
-    });
+  // TAB NAVIGATION
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tabId).style.display = 'block';
+    // Intake and Team Review are combined
+    if (tabId === 'intake') {
+      document.getElementById('tab-team-review').style.display = 'block';
+    }
+    btn.classList.add('active');
+  }
+
+  // STAGE DROPDOWN
+  function toggleStageDropdown() {
+    const dd = document.getElementById('stage-dropdown');
+    const chevron = document.getElementById('stage-chevron');
+    const isOpen = dd.style.display !== 'none';
+    dd.style.display = isOpen ? 'none' : 'block';
+    chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+  }
+  document.addEventListener('click', function(e) {
+    if (!document.getElementById('stage-badge').contains(e.target)) {
+      document.getElementById('stage-dropdown').style.display = 'none';
+      document.getElementById('stage-chevron').style.transform = '';
+    }
   });
 
-  // Action buttons
-  document.querySelectorAll('.btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const label = this.textContent.trim();
-      alert('Action triggered: ' + label + '\n\nIn the full workflow, this would open a confirmation dialog and update the NPA status.');
-    });
+  // ASSESSMENT TOGGLE
+  function toggleAssessment() {
+    const body = document.getElementById('assessment-body');
+    const chevron = document.getElementById('assessment-chevron');
+    const isOpen = body.style.display !== 'none';
+    body.style.display = isOpen ? 'none' : 'block';
+    chevron.classList.toggle('open', !isOpen);
+  }
+
+  // OUTSTANDING ITEMS CHECKLIST + GATING
+  const criticalItems = [0, 1]; // indices of critical items
+  let checkedItems = new Set();
+
+  function handleCheck(index) {
+    const cb = document.getElementById('check-' + index);
+    const item = document.getElementById('oi-' + index);
+    if (cb.checked) {
+      checkedItems.add(index);
+      item.style.opacity = '0.5';
+      item.style.textDecoration = 'none';
+    } else {
+      checkedItems.delete(index);
+      item.style.opacity = '1';
+    }
+    const openCount = 6 - checkedItems.size;
+    document.getElementById('open-count-badge').textContent = openCount + ' Open';
+    document.getElementById('outstanding-count').textContent = openCount;
+
+    // Check if all critical items are resolved
+    const allCriticalResolved = criticalItems.every(i => checkedItems.has(i));
+    const approveBtn = document.getElementById('btn-approve');
+    const lockMsg = document.getElementById('action-lock-msg');
+    if (allCriticalResolved) {
+      approveBtn.disabled = false;
+      approveBtn.style.opacity = '1';
+      approveBtn.style.cursor = 'pointer';
+      lockMsg.textContent = '✓ Critical items resolved — approval available';
+      lockMsg.style.color = 'var(--green)';
+    } else {
+      const remaining = criticalItems.filter(i => !checkedItems.has(i)).length;
+      approveBtn.disabled = true;
+      approveBtn.style.opacity = '0.4';
+      approveBtn.style.cursor = 'not-allowed';
+      lockMsg.textContent = '🔒 ' + remaining + ' critical item' + (remaining > 1 ? 's' : '') + ' must be resolved to approve';
+      lockMsg.style.color = 'var(--text-muted)';
+    }
+  }
+
+  // ROUTE TO OWNER MODAL
+  function showRouteModal(owner, action) {
+    document.getElementById('modal-owner').textContent = owner;
+    document.getElementById('modal-action').textContent = action;
+    document.getElementById('route-modal').style.display = 'flex';
+  }
+  function closeRouteModal() {
+    document.getElementById('route-modal').style.display = 'none';
+  }
+  function confirmRoute() {
+    closeRouteModal();
+    alert('Notification sent to owner. They will receive an email with the action item details.');
+  }
+
+  // ACTION BUTTONS
+  document.getElementById('btn-escalate').addEventListener('click', () => alert('Escalated to senior committee. This would trigger a notification and update the NPA status.'));
+  document.getElementById('btn-reject').addEventListener('click', () => alert('Product rejected. This would close the NPA and notify stakeholders.'));
+  document.getElementById('btn-request').addEventListener('click', () => alert('Info request sent. The submitting team will be notified to provide additional information.'));
+  document.getElementById('btn-approve').addEventListener('click', function() {
+    if (!this.disabled) alert('Product approved with conditions. Advancing to Stage 3 — Operational Readiness.');
   });
 </script>
 </body>
