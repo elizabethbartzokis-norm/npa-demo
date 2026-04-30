@@ -1,0 +1,2330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Product Analysis — Morgan Stanley</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f5f3;
+    --surface: #ffffff;
+    --border: #e2e2de;
+    --border-light: #eeeeeb;
+    --text-primary: #1a1a1a;
+    --text-secondary: #6b6b6b;
+    --text-muted: #9b9b9b;
+    --accent: #1a1a1a;
+    --green: #16a34a;
+    --green-bg: #f0fdf4;
+    --green-border: #bbf7d0;
+    --yellow: #b45309;
+    --yellow-bg: #fffbeb;
+    --yellow-border: #fde68a;
+    --red: #dc2626;
+    --red-bg: #fef2f2;
+    --red-border: #fecaca;
+    --blue: #1d4ed8;
+    --blue-bg: #eff6ff;
+    --blue-border: #bfdbfe;
+    --orange: #ea580c;
+    --orange-bg: #fff7ed;
+    --orange-border: #fed7aa;
+    --sidebar-width: 320px;
+    --nav-width: 200px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 13px;
+    line-height: 1.5;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* LEFT NAV */
+  .nav {
+    width: var(--nav-width);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow-y: auto;
+  }
+
+  .nav-logo {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-logo-icon {
+    width: 28px;
+    height: 28px;
+    background: #1a1a1a;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .nav-logo-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+
+  .nav-logo-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .nav-items {
+    padding: 12px 8px;
+    flex: 1;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background 0.15s;
+    font-weight: 400;
+  }
+
+  .nav-item:hover { background: var(--bg); }
+  .nav-item.active { background: var(--bg); color: var(--text-primary); font-weight: 500; }
+
+  .nav-item svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  .nav-footer {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .nav-footer-name { font-weight: 500; color: var(--text-secondary); font-size: 12px; }
+
+  /* MAIN CONTENT */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px 40px;
+    min-width: 0;
+  }
+
+  /* RIGHT SIDEBAR */
+  .sidebar {
+    width: var(--sidebar-width);
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .sidebar-tabs {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 44px;
+    border-left: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .sidebar-wrapper {
+    position: relative;
+    display: flex;
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+  }
+
+  .sidebar-content {
+    width: calc(var(--sidebar-width) - 44px);
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+  }
+
+  .sidebar-tab-btn {
+    width: 44px;
+    height: 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    transition: color 0.15s, background 0.15s;
+    font-size: 9px;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+
+  .sidebar-tab-btn:hover { background: var(--bg); color: var(--text-secondary); }
+  .sidebar-tab-btn.active { color: var(--text-primary); background: var(--bg); }
+  .sidebar-tab-btn svg { width: 15px; height: 15px; }
+
+  .sidebar-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .sidebar-count { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; }
+
+  .sidebar-pagination {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .page-num {
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .page-btn {
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+  }
+
+  .page-btn:hover { background: var(--bg); }
+  .page-btn svg { width: 12px; height: 12px; }
+
+  .review-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-light);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .review-item:hover { background: var(--bg); }
+  .review-item.active { background: #f0f0ee; border-left: 3px solid var(--text-primary); }
+
+  .review-item-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .review-icon {
+    width: 24px;
+    height: 24px;
+    background: #1a1a1a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .review-icon svg { width: 12px; height: 12px; color: white; }
+
+  .review-item-name {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .review-item-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 32px;
+  }
+
+  .review-panel {
+    padding: 16px;
+    display: none;
+  }
+
+  .review-panel.active { display: block; }
+
+  .review-panel-title {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* BADGES */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .badge-green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-yellow { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .badge-red { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .badge-blue { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+  .badge-orange { background: var(--orange-bg); color: var(--orange); border: 1px solid var(--orange-border); }
+  .badge-gray { background: #f4f4f2; color: var(--text-secondary); border: 1px solid var(--border); }
+  .badge-purple { background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe; }
+
+  /* REPORT HEADER */
+  .report-header { margin-bottom: 28px; }
+  .report-title { font-size: 22px; font-weight: 600; margin-bottom: 6px; letter-spacing: -0.3px; }
+  .report-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .report-meta-label { font-size: 13px; font-weight: 500; }
+  .report-meta-sep { color: var(--text-muted); }
+  .report-meta-entity { font-size: 13px; color: var(--text-secondary); }
+  .report-badges { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+  .report-dates { font-size: 11px; color: var(--text-muted); }
+  .report-dates span { margin-right: 16px; }
+
+  /* SECTION */
+  .section { margin-bottom: 32px; }
+  .section-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; letter-spacing: -0.2px; }
+  .section-subtitle { font-size: 12px; color: var(--text-secondary); margin-bottom: 16px; }
+
+  /* OVERALL ASSESSMENT */
+  .risk-score-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .risk-score-label { font-size: 13px; font-weight: 500; }
+  .risk-score-value { font-size: 16px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; }
+
+  .progress-bar {
+    width: 100%;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    margin-bottom: 6px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--text-primary);
+    border-radius: 3px;
+    transition: width 1s ease;
+  }
+
+  .progress-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .decision-banner {
+    background: var(--yellow-bg);
+    border: 1px solid var(--yellow-border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .decision-banner-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  .decision-banner-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--yellow);
+    margin-bottom: 6px;
+  }
+
+  .decision-banner-text { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+  .team-scores { display: flex; flex-direction: column; gap: 14px; }
+
+  .team-score-row { }
+
+  .team-score-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  .team-score-name { font-size: 13px; font-weight: 500; }
+  .team-score-value { font-size: 13px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; }
+  .team-score-desc { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+  /* REG APPLICABILITY */
+  .reg-item {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .reg-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .reg-item-header:hover { background: var(--bg); }
+
+  .reg-item-left { flex: 1; }
+  .reg-item-name { font-size: 13px; font-weight: 500; }
+  .reg-item-jurisdiction { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  .reg-item-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .chevron {
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+
+  .chevron.open { transform: rotate(180deg); }
+
+  .reg-item-body {
+    padding: 0 16px 14px;
+    border-top: 1px solid var(--border-light);
+    display: none;
+  }
+
+  .reg-item-body.open { display: block; }
+
+  .reg-summary {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 12px 0 10px;
+    line-height: 1.6;
+  }
+
+  .reg-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    margin-top: 12px;
+  }
+
+  .reg-analysis {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .reg-obligations {
+    margin-top: 8px;
+    padding-left: 16px;
+  }
+
+  .reg-obligations li {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    line-height: 1.5;
+  }
+
+  /* INTAKE COMPLETENESS */
+  .intake-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .intake-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    background: var(--surface);
+  }
+
+  .intake-card-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .intake-card-value {
+    font-size: 28px;
+    font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: -1px;
+  }
+
+  /* TEAM REVIEW */
+  .team-group {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .team-group-header {
+    background: #f9f9f7;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .team-group-name { font-size: 13px; font-weight: 600; }
+  .team-group-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  .qa-item {
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .qa-item:last-child { border-bottom: none; }
+
+  .qa-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .qa-item-header:hover { background: var(--bg); }
+
+  .qa-question { font-size: 12px; flex: 1; padding-right: 12px; }
+
+  .qa-body {
+    padding: 0 16px 14px;
+    border-top: 1px solid var(--border-light);
+    display: none;
+  }
+
+  .qa-body.open { display: block; }
+
+  .qa-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 12px;
+    margin-bottom: 6px;
+  }
+
+  .qa-response {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .qa-risk-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .qa-risk-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  /* OUTSTANDING ITEMS */
+  .outstanding-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .outstanding-item {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 10px;
+    background: var(--surface);
+  }
+
+  .outstanding-item.critical { border-left: 3px solid var(--red); background: var(--red-bg); }
+  .outstanding-item.high { border-left: 3px solid var(--orange); background: var(--orange-bg); }
+  .outstanding-item.medium { border-left: 3px solid var(--yellow); background: var(--yellow-bg); }
+
+  .outstanding-item-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .outstanding-item-desc {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .outstanding-item-meta {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 3px;
+  }
+
+  .outstanding-item-meta strong { color: var(--text-primary); }
+
+  /* VENDOR CONSOLIDATION */
+  .vendor-box {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    background: var(--surface);
+    margin-bottom: 16px;
+  }
+
+  .vendor-box-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .vendor-box-text { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+  .similar-use-case {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  /* WORKFLOW BUTTONS */
+  .workflow-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .workflow-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--text-secondary);
+  }
+
+  .workflow-step:hover { border-color: var(--text-primary); color: var(--text-primary); }
+
+  .workflow-step.active {
+    background: var(--text-primary);
+    color: white;
+    border-color: var(--text-primary);
+  }
+
+  .workflow-step-num {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 600;
+    background: var(--border);
+    color: var(--text-secondary);
+  }
+
+  .workflow-step.active .workflow-step-num {
+    background: rgba(255,255,255,0.25);
+    color: white;
+  }
+
+  .workflow-arrow { color: var(--text-muted); font-size: 12px; }
+
+  /* ACTION BUTTONS */
+  .action-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    align-items: center;
+  }
+
+  .action-bar-label { font-size: 12px; color: var(--text-secondary); flex: 1; }
+
+  .btn {
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'IBM Plex Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+  }
+
+  .btn-approve { background: var(--green-bg); color: var(--green); border-color: var(--green-border); }
+  .btn-approve:hover { background: #dcfce7; }
+  .btn-reject { background: var(--red-bg); color: var(--red); border-color: var(--red-border); }
+  .btn-reject:hover { background: #fee2e2; }
+  .btn-escalate { background: var(--yellow-bg); color: var(--yellow); border-color: var(--yellow-border); }
+  .btn-escalate:hover { background: #fef3c7; }
+  .btn-request { background: var(--bg); color: var(--text-secondary); border-color: var(--border); }
+  .btn-request:hover { background: var(--border); }
+
+  /* SIDEBAR REVIEW PANEL */
+  .review-action-items { margin-bottom: 16px; }
+
+  .review-action-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .review-action-title svg { width: 14px; height: 14px; color: var(--text-muted); }
+
+  .review-action-list {
+    padding-left: 16px;
+  }
+
+  .review-action-list li {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+
+  .review-explanation {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .review-explanation-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    cursor: pointer;
+    background: #f9f9f7;
+    user-select: none;
+  }
+
+  .review-explanation-header:hover { background: var(--bg); }
+
+  .review-explanation-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .review-explanation-title svg { width: 14px; height: 14px; color: var(--text-muted); }
+
+  .review-explanation-body {
+    padding: 14px;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .review-explanation-body p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+
+  .review-explanation-body p:last-child { margin-bottom: 0; }
+
+  .review-explanation-body strong { color: var(--text-primary); font-weight: 600; }
+
+  .review-comments {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .review-comments-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    background: #f9f9f7;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .review-comments-header svg { width: 14px; height: 14px; color: var(--text-muted); }
+
+  .review-comments-input {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    gap: 8px;
+  }
+
+  .review-comments-input input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 12px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: var(--text-secondary);
+    background: none;
+  }
+
+  .review-comments-input button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 2px;
+  }
+
+  .review-comments-input button:hover { color: var(--text-primary); }
+  .review-comments-input button svg { width: 14px; height: 14px; }
+
+  /* divider */
+  hr { border: none; border-top: 1px solid var(--border-light); margin: 20px 0; }
+
+  .comment-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .comment-count svg { width: 11px; height: 11px; }
+
+  /* TAB NAVIGATION */
+  .tab-btn {
+    padding: 10px 16px;
+    border: none;
+    background: none;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--text-primary); }
+  .tab-btn.active { color: var(--text-primary); border-bottom-color: var(--text-primary); }
+  .tab-content { }
+</style>
+</head>
+<body>
+
+<!-- LEFT NAV -->
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="nav-logo-icon">N</div>
+    <div>
+      <div class="nav-logo-text">Norm Ai</div>
+      <div class="nav-logo-sub">Morgan Stanley</div>
+    </div>
+  </div>
+  <div class="nav-items">
+    <div class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+      Home
+    </div>
+    <div class="nav-item active">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4h10M3 8h10M3 12h6"/></svg>
+      NPA Management
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="M5 7h6M5 10h4"/></svg>
+      Contract Dashboard
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v12M2 8h12"/></svg>
+      Playbook Lab
+    </div>
+  </div>
+  <div class="nav-footer">
+    <div class="nav-footer-name">Jane Doe</div>
+    <div>jane.doe@morganstanley.com</div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- HEADER -->
+  <div class="report-header">
+    <div class="report-title">New Product Analysis</div>
+    <div class="report-meta">
+      <span class="report-meta-label">MS Emerging Markets ESG ETF (MSESG)</span>
+      <span class="report-meta-sep">·</span>
+      <span class="report-meta-entity">Entity: Morgan Stanley</span>
+    </div>
+    <div class="report-badges">
+      <span class="badge badge-blue">Stage 2 — Risk &amp; Control Review</span>
+      <span class="badge badge-gray">Internal Use Only</span>
+    </div>
+    <div class="report-dates">
+      <span>Submitted Apr 14, 2026</span>
+      <span>Reviewed by Norm on Apr 18, 2026</span>
+    </div>
+  </div>
+
+  <!-- STAGE DROPDOWN + TAB NAV -->
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+    <!-- Stage Dropdown Badge -->
+    <div style="position:relative; display:inline-block;">
+      <div id="stage-badge" onclick="toggleStageDropdown()" style="display:inline-flex; align-items:center; gap:6px; padding:5px 10px; background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-border); border-radius:6px; font-size:12px; font-weight:500; cursor:pointer; user-select:none;">
+        <span>Stage 2 — Risk &amp; Control Review</span>
+        <svg id="stage-chevron" style="width:13px;height:13px;transition:transform 0.2s;" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+      </div>
+      <div id="stage-dropdown" style="display:none; position:absolute; top:calc(100% + 4px); left:0; background:var(--surface); border:1px solid var(--border); border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.08); z-index:100; min-width:240px; overflow:hidden;">
+        <div style="padding:6px 0;">
+          <div class="stage-option" style="padding:8px 14px; font-size:12px; display:flex; align-items:center; gap:10px; color:var(--text-secondary); cursor:default;">
+            <span style="width:18px;height:18px;background:var(--green);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;">✓</span>
+            <span>Stage 1 — Intake &amp; Triage</span>
+          </div>
+          <div class="stage-option active-stage" style="padding:8px 14px; font-size:12px; display:flex; align-items:center; gap:10px; background:var(--blue-bg); color:var(--blue); cursor:default;">
+            <span style="width:18px;height:18px;background:var(--blue);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;">2</span>
+            <span style="font-weight:600;">Stage 2 — Risk &amp; Control Review</span>
+          </div>
+          <div class="stage-option" style="padding:8px 14px; font-size:12px; display:flex; align-items:center; gap:10px; color:var(--text-muted); cursor:default;">
+            <span style="width:18px;height:18px;background:var(--border);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--text-muted);flex-shrink:0;">3</span>
+            <span>Stage 3 — Operational Readiness</span>
+          </div>
+          <div class="stage-option" style="padding:8px 14px; font-size:12px; display:flex; align-items:center; gap:10px; color:var(--text-muted); cursor:default;">
+            <span style="width:18px;height:18px;background:var(--border);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--text-muted);flex-shrink:0;">4</span>
+            <span>Stage 4 — Committee Decision</span>
+          </div>
+          <div class="stage-option" style="padding:8px 14px; font-size:12px; display:flex; align-items:center; gap:10px; color:var(--text-muted); cursor:default;">
+            <span style="width:18px;height:18px;background:var(--border);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--text-muted);flex-shrink:0;">5</span>
+            <span>Stage 5 — Conditional Approval</span>
+          </div>
+          <div class="stage-option" style="padding:8px 14px; font-size:12px; display:flex; align-items:center; gap:10px; color:var(--text-muted); cursor:default;">
+            <span style="width:18px;height:18px;background:var(--border);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--text-muted);flex-shrink:0;">6</span>
+            <span>Stage 6 — Launch &amp; Monitoring</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Gated Action Buttons -->
+    <div style="display:flex; gap:8px; align-items:center;">
+      <span style="font-size:11px; color:var(--text-muted); margin-right:4px;" id="action-lock-msg">🔒 2 critical items must be resolved to approve</span>
+      <button class="btn btn-approve" id="btn-approve" disabled style="opacity:0.4;cursor:not-allowed;">✓ Approve</button>
+      <button class="btn btn-escalate" id="btn-escalate">↑ Escalate</button>
+      <button class="btn btn-reject" id="btn-reject">✕ Reject</button>
+      <button class="btn btn-request" id="btn-request">⟳ Request Info</button>
+    </div>
+  </div>
+
+  <!-- TAB NAVIGATION -->
+  <div style="display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:28px;">
+    <button class="tab-btn active" onclick="switchTab('overview', this)">Overview</button>
+    <button class="tab-btn" onclick="switchTab('regulatory', this)">Regulatory Applicability</button>
+    <button class="tab-btn" onclick="switchTab('intake', this)">Team-by-Team Review</button>
+    <button class="tab-btn" onclick="switchTab('outstanding', this)">Outstanding Items <span id="outstanding-count" style="background:var(--red);color:white;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:4px;">6</span></button>
+  </div>
+
+  <!-- TAB: OVERVIEW -->
+  <div id="tab-overview" class="tab-content">
+
+  <!-- OVERALL ASSESSMENT -->
+  <div class="section">
+    <div class="section-title">Overall Assessment</div>
+
+    <div class="risk-score-row">
+      <span class="risk-score-label">Risk Score</span>
+      <span class="risk-score-value">70/100</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+    <div class="progress-label">Proceed with Conditions — Open items are operational, not fundamental regulatory barriers.</div>
+
+    <div class="decision-banner">
+      <div class="decision-banner-icon">⚠</div>
+      <div>
+        <div class="decision-banner-title">Recommendation: Approve with Conditions</div>
+        <div class="decision-banner-text">The MS Emerging Markets ESG ETF presents a manageable risk profile. SEC registration under the Securities Act of 1933 and Investment Company Act of 1940 is required and in scope. FINRA suitability and Reg BI obligations apply to distribution channels. Open items are operational — ESG methodology documentation, counterparty risk controls, FINRA marketing review, and product governance sign-off — rather than fundamental regulatory barriers. Advance to Stage 3 with conditions.</div>
+      </div>
+    </div>
+
+    <!-- Assessment by Team — collapsible -->
+    <div style="border:1px solid var(--border); border-radius:8px; overflow:hidden; background:var(--surface);">
+      <div onclick="toggleAssessment()" style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; cursor:pointer; user-select:none;" id="assessment-header">
+        <span style="font-size:13px; font-weight:600;">Assessment by Team</span>
+        <svg id="assessment-chevron" class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+      </div>
+      <div id="assessment-body" style="display:none; padding:16px; border-top:1px solid var(--border-light);">
+        <div class="team-scores">
+          <div class="team-score-row">
+            <div class="team-score-header"><span class="team-score-name">Legal &amp; Regulatory</span><span class="team-score-value">78/100</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:78%"></div></div>
+            <div class="team-score-desc">SEC registration and FINRA suitability triggered; product classification and prospectus requirements in scope but manageable</div>
+          </div>
+          <div class="team-score-row">
+            <div class="team-score-header"><span class="team-score-name">Risk Management</span><span class="team-score-value">70/100</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+            <div class="team-score-desc">Emerging markets exposure introduces liquidity and currency risk; counterparty controls not yet fully defined</div>
+          </div>
+          <div class="team-score-row">
+            <div class="team-score-header"><span class="team-score-name">Operations</span><span class="team-score-value">72/100</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div>
+            <div class="team-score-desc">Trade capture, settlement, and NAV calculation workflows require validation before launch</div>
+          </div>
+          <div class="team-score-row">
+            <div class="team-score-header"><span class="team-score-name">Compliance</span><span class="team-score-value">68/100</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div>
+            <div class="team-score-desc">ESG disclosure framework and marketing review not yet evidenced; supervisory controls required before pilot</div>
+          </div>
+          <div class="team-score-row">
+            <div class="team-score-header"><span class="team-score-name">ESG &amp; Sustainable Investing</span><span class="team-score-value">65/100</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:65%"></div></div>
+            <div class="team-score-desc">ESG methodology and data sourcing not yet fully documented; greenwashing risk requires independent validation and SEC-aligned disclosure framework</div>
+          </div>
+          <div class="team-score-row">
+            <div class="team-score-header"><span class="team-score-name">Product Governance</span><span class="team-score-value">74/100</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:74%"></div></div>
+            <div class="team-score-desc">Target market definition and distributor suitability criteria require sign-off; product complexity disclosure not yet drafted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div><!-- end tab-overview -->
+
+  <!-- TAB: REGULATORY -->
+  <div id="tab-regulatory" class="tab-content" style="display:none;">
+
+  <!-- REGULATORY APPLICABILITY -->
+  <div class="section">
+    <div class="section-title">Regulatory Applicability</div>
+    <div class="section-subtitle">Automated scoping against applicable securities and investment management regulations</div>
+
+    <!-- Securities Act -->
+    <div class="reg-item">
+      <div class="reg-item-header" onclick="toggleReg(this)">
+        <div class="reg-item-left">
+          <div class="reg-item-name">Securities Act of 1933 — Registration Requirements</div>
+          <div class="reg-item-jurisdiction">Federal — SEC</div>
+        </div>
+        <div class="reg-item-right">
+          <span class="badge badge-orange">In Scope — Registration Required</span>
+          <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+      </div>
+      <div class="reg-item-body">
+        <div class="reg-summary">ETF shares constitute securities and must be registered under the Securities Act of 1933. A registration statement on Form N-1A must be filed and declared effective before any public offering.</div>
+        <div class="reg-label">Analysis</div>
+        <div class="reg-analysis">The Securities Act of 1933 requires that any offer or sale of securities to the public be registered with the SEC unless an exemption applies. ETF shares are securities under Section 2(a)(1) of the Act. The MS Emerging Markets ESG ETF will offer shares to the public through authorized participants and secondary market trading, triggering full registration requirements. Form N-1A serves as the combined registration statement and prospectus for mutual funds and ETFs. The prospectus must include a complete description of the fund's investment objective, strategy, ESG methodology, risks, fees, and portfolio manager information. The SAI (Statement of Additional Information) must also be prepared. No exemption is available — this is a standard ETF registration requirement and is not a barrier to launch, but the registration process requires a defined drafting timeline and SEC review period of approximately 75 days.</div>
+        <div class="reg-label">Obligations</div>
+        <ul class="reg-obligations">
+          <li>File Form N-1A registration statement with the SEC</li>
+          <li>Prepare and finalize prospectus including ESG methodology disclosure</li>
+          <li>Obtain SEC effectiveness declaration before any public offering</li>
+          <li>File annual updates and material amendments as required</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Investment Company Act -->
+    <div class="reg-item">
+      <div class="reg-item-header" onclick="toggleReg(this)">
+        <div class="reg-item-left">
+          <div class="reg-item-name">Investment Company Act of 1940 — Fund Registration</div>
+          <div class="reg-item-jurisdiction">Federal — SEC</div>
+        </div>
+        <div class="reg-item-right">
+          <span class="badge badge-orange">In Scope — Fund Registration Required</span>
+          <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+      </div>
+      <div class="reg-item-body">
+        <div class="reg-summary">The ETF must register as an open-end management investment company under the Investment Company Act of 1940. Ongoing governance, reporting, and compliance obligations apply.</div>
+        <div class="reg-label">Analysis</div>
+        <div class="reg-analysis">The Investment Company Act of 1940 governs the organization and operation of investment companies, including ETFs structured as open-end funds. The MS Emerging Markets ESG ETF will pool investor capital and invest in a diversified portfolio of emerging market equity securities selected pursuant to an ESG methodology, meeting the definition of an investment company under Section 3(a)(1)(A). Registration as an open-end management investment company is required. The Act imposes ongoing obligations including board oversight requirements, custody requirements, affiliated transaction restrictions, and mandatory compliance program obligations under Rule 38a-1. Morgan Stanley's existing investment management infrastructure and compliance program substantially satisfy the framework requirements, reducing the incremental burden of this registration.</div>
+        <div class="reg-label">Obligations</div>
+        <ul class="reg-obligations">
+          <li>Register as open-end management investment company under the 1940 Act</li>
+          <li>Establish and maintain a Rule 38a-1 compliance program for the fund</li>
+          <li>Designate an independent board with required audit committee</li>
+          <li>File annual reports on Form N-CEN and semi-annual reports on Form N-PORT</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- FINRA Suitability -->
+    <div class="reg-item">
+      <div class="reg-item-header" onclick="toggleReg(this)">
+        <div class="reg-item-left">
+          <div class="reg-item-name">FINRA Rule 2111 — Suitability &amp; Reg BI</div>
+          <div class="reg-item-jurisdiction">Federal — FINRA / SEC</div>
+        </div>
+        <div class="reg-item-right">
+          <span class="badge badge-orange">In Scope — Suitability Obligations Apply</span>
+          <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+      </div>
+      <div class="reg-item-body">
+        <div class="reg-summary">Broker-dealer distribution of ETF shares triggers FINRA Rule 2111 suitability obligations and SEC Regulation Best Interest for retail investor recommendations.</div>
+        <div class="reg-label">Analysis</div>
+        <div class="reg-analysis">FINRA Rule 2111 requires that broker-dealers have a reasonable basis to believe a recommended security is suitable for a customer based on the customer's investment profile. SEC Regulation Best Interest (Reg BI), effective since June 2020, imposes a higher "best interest" standard for recommendations to retail customers, requiring broker-dealers to act in the retail customer's best interest at the time of a recommendation. The MS Emerging Markets ESG ETF will be distributed through Morgan Stanley's broker-dealer network, directly triggering both frameworks. The emerging markets mandate and ESG overlay introduce complexity relevant to suitability analysis — advisors must understand and accurately represent both the geographic risk profile (currency, political, liquidity risk) and the ESG methodology (index construction, exclusion criteria, potential tracking divergence from non-ESG benchmarks). Suitability profiles and training materials must be prepared before distribution commences.</div>
+        <div class="reg-label">Obligations</div>
+        <ul class="reg-obligations">
+          <li>Prepare suitability profile and target investor documentation</li>
+          <li>Develop advisor training materials covering emerging markets risk and ESG methodology</li>
+          <li>Establish Form CRS disclosures for retail distribution channels</li>
+          <li>Document best interest analysis and conflict disclosure for Reg BI compliance</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SEC ESG Disclosure -->
+    <div class="reg-item">
+      <div class="reg-item-header" onclick="toggleReg(this)">
+        <div class="reg-item-left">
+          <div class="reg-item-name">SEC Names Rule &amp; ESG Disclosure Requirements</div>
+          <div class="reg-item-jurisdiction">Federal — SEC</div>
+        </div>
+        <div class="reg-item-right">
+          <span class="badge badge-orange">In Scope — Enhanced Disclosure Required</span>
+          <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+      </div>
+      <div class="reg-item-body">
+        <div class="reg-summary">The ESG label in the fund name triggers the SEC's amended Names Rule, requiring 80% portfolio alignment with the ESG strategy and enhanced methodology disclosure in the prospectus.</div>
+        <div class="reg-label">Analysis</div>
+        <div class="reg-analysis">The SEC's amended Rule 35d-1 (Names Rule), effective September 2023 with a compliance date of December 2025, requires that any fund with a name suggesting a focus on a particular investment type — including ESG characteristics — invest at least 80% of its assets consistently with that focus. The "ESG" label in the fund name directly triggers this requirement. Additionally, the SEC has signaled through enforcement actions and staff guidance that ESG-labeled funds must provide clear, accurate, and non-misleading descriptions of their ESG methodology, data sources, and screening criteria. Greenwashing risk — the risk that ESG claims in marketing or fund documentation are not adequately supported by the actual investment process — creates both regulatory and reputational exposure. The fund's ESG methodology must be independently validated, clearly documented in the prospectus, and consistently applied. This is currently an open item and represents one of the highest-priority outstanding issues.</div>
+        <div class="reg-label">Obligations</div>
+        <ul class="reg-obligations">
+          <li>Maintain 80% portfolio alignment with ESG investment criteria at all times</li>
+          <li>Document ESG methodology, data sources, and index construction rules in the prospectus</li>
+          <li>Complete independent validation of ESG scoring and exclusion methodology</li>
+          <li>Establish ongoing monitoring to ensure portfolio remains in compliance with ESG mandate</li>
+          <li>Implement annual review of ESG methodology against evolving SEC guidance</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- FINRA 2210 -->
+    <div class="reg-item">
+      <div class="reg-item-header" onclick="toggleReg(this)">
+        <div class="reg-item-left">
+          <div class="reg-item-name">FINRA Rule 2210 — Communications with the Public</div>
+          <div class="reg-item-jurisdiction">Federal — FINRA</div>
+        </div>
+        <div class="reg-item-right">
+          <span class="badge badge-yellow">Needs Review — Marketing Materials Not Yet Submitted</span>
+          <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+      </div>
+      <div class="reg-item-body">
+        <div class="reg-summary">All retail communications and marketing materials for the ETF must comply with FINRA Rule 2210 and, for certain materials, be filed with FINRA's Advertising Regulation Department prior to use.</div>
+        <div class="reg-label">Analysis</div>
+        <div class="reg-analysis">FINRA Rule 2210 governs all member communications with the public, including retail communications such as advertisements, sales literature, and correspondence. Materials promoting an ESG-labeled ETF are subject to heightened scrutiny given the risk of misleading ESG performance claims. Under Rule 2210(c), certain retail communications must be filed with FINRA's Advertising Regulation Department at least 10 business days before first use (for new members) or within 10 business days of first use for established members. Given the ESG focus and emerging markets mandate, Morgan Stanley's compliance team should proactively submit materials for FINRA review. No marketing materials have been submitted as of this review, which is an outstanding item that must be resolved before distribution commences. ESG performance representations and any comparative ESG claims require particular care.</div>
+      </div>
+    </div>
+
+    <!-- CFTC -->
+    <div class="reg-item">
+      <div class="reg-item-header" onclick="toggleReg(this)">
+        <div class="reg-item-left">
+          <div class="reg-item-name">CFTC Commodity Pool Regulations</div>
+          <div class="reg-item-jurisdiction">Federal — CFTC</div>
+        </div>
+        <div class="reg-item-right">
+          <span class="badge badge-green">Not Triggered</span>
+          <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+      </div>
+      <div class="reg-item-body">
+        <div class="reg-summary">The ETF's investment strategy does not involve derivatives exposure above the de minimis threshold. CFTC commodity pool operator registration is not required.</div>
+        <div class="reg-label">Analysis</div>
+        <div class="reg-analysis">CFTC regulations require investment funds that trade commodity interests — including futures, swaps, and certain options — above a de minimis threshold to register as commodity pools, with the fund manager registering as a Commodity Pool Operator (CPO). The MS Emerging Markets ESG ETF is a long-only equity fund investing in emerging market equities selected pursuant to an ESG methodology. The fund's investment strategy does not contemplate the use of commodity derivatives, currency futures, or swaps above the CFTC's de minimis threshold (no more than 5% of fund assets in initial margin for commodity futures and options, or no more than 100% of liquidation value in commodity interests). Accordingly, CFTC commodity pool registration is not triggered. This determination should be revisited if the fund's investment strategy is modified to include derivatives exposure.</div>
+      </div>
+    </div>
+
+    <!-- State Blue Sky -->
+    <div class="reg-item">
+      <div class="reg-item-header" onclick="toggleReg(this)">
+        <div class="reg-item-left">
+          <div class="reg-item-name">State Blue Sky Laws — Notice Filing Requirements</div>
+          <div class="reg-item-jurisdiction">Multi-state</div>
+        </div>
+        <div class="reg-item-right">
+          <span class="badge badge-yellow">No Current Prohibition — Ongoing Monitoring Required</span>
+          <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+      </div>
+      <div class="reg-item-body">
+        <div class="reg-summary">Registered ETF shares are generally covered securities exempt from state registration, but notice filings and fees are required in states where the ETF will be distributed.</div>
+        <div class="reg-label">Analysis</div>
+        <div class="reg-analysis">Under the National Securities Markets Improvement Act of 1996 (NSMIA), shares of registered investment companies are "covered securities" exempt from state securities registration requirements. However, states retain authority to require notice filings and fees as a condition of distribution within their jurisdiction. Most states require annual notice filings for ETFs distributed to their residents. The fund's distribution scope — initial targeted states for launch — must be confirmed and the corresponding state notice filings coordinated. Some states have enacted or are considering ESG-specific disclosure requirements for investment products marketed to retail investors; ongoing monitoring of state-level ESG regulation developments is required. No current state law prohibits the distribution of this ETF as currently scoped.</div>
+        <div class="reg-label">Obligations</div>
+        <ul class="reg-obligations">
+          <li>Confirm initial target state distribution list and coordinate notice filings</li>
+          <li>Pay applicable state notice filing fees before distribution in each state</li>
+          <li>Monitor state-level ESG disclosure requirements as regulatory landscape evolves</li>
+          <li>Re-run regulatory applicability analysis if distribution scope expands</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </div><!-- end tab-regulatory -->
+
+  <!-- TAB: INTAKE -->
+  <div id="tab-intake" class="tab-content" style="display:none;">
+  <!-- INTAKE COMPLETENESS -->
+  <div class="section">
+    <div class="intake-cards">
+      <div class="intake-card">
+        <div class="intake-card-label">Total Questions</div>
+        <div class="intake-card-value">24</div>
+      </div>
+      <div class="intake-card">
+        <div class="intake-card-label">Answered</div>
+        <div class="intake-card-value" style="color: var(--green)">18</div>
+      </div>
+      <div class="intake-card">
+        <div class="intake-card-label">Needs Input</div>
+        <div class="intake-card-value" style="color: var(--red)">6</div>
+      </div>
+    </div>
+  </div>
+  </div><!-- end tab-intake -->
+
+  <!-- TAB: TEAM REVIEW (merged into intake tab via JS) -->
+  <div id="tab-team-review" class="tab-content" style="display:none;">
+  <!-- TEAM BY TEAM REVIEW -->
+  <div class="section">
+    <div class="section-title">Team-by-Team Review</div>
+    <div class="section-subtitle">Each team's standard threshold questions are pre-answered from the intake submission. Reviewers focus only on flagged items.</div>
+
+    <!-- Legal & Regulatory -->
+    <div class="team-group">
+      <div class="team-group-header">
+        <div class="team-group-name">Legal &amp; Regulatory</div>
+        <div class="team-group-desc">Securities registration, FINRA rules, product classification, and lifecycle compliance</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">1. Is this ETF required to register under the Securities Act of 1933?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-green">Answered</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">Yes. The ETF's shares constitute securities under the Securities Act of 1933, and a full registration on Form N-1A is required before any public offering. Morgan Stanley's legal team has confirmed the registration pathway and initial prospectus drafting has commenced. The registration timeline targets SEC submission within 45 days, with an expected effectiveness declaration approximately 75 days thereafter.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">Standard registration requirement; well-understood pathway. Morgan Stanley's existing fund infrastructure supports the registration process without material incremental risk.</div>
+            <span class="badge badge-green">Low Risk</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Document registration timeline and assign lead counsel. Ensure prospectus drafting incorporates ESG methodology disclosure requirements under the amended Names Rule.</div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">2. Does this product trigger Investment Company Act of 1940 registration requirements?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-green">Answered</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">Yes. The fund pools investor capital and invests in a diversified portfolio of securities, meeting the definition of an investment company under Section 3(a)(1)(A) of the 1940 Act. Registration as an open-end management investment company is required. Morgan Stanley's existing compliance infrastructure substantially satisfies the board oversight, custody, and compliance program requirements, reducing incremental burden.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">Standard fund registration requirement. Morgan Stanley's existing investment management compliance program significantly reduces the incremental compliance burden.</div>
+            <span class="badge badge-green">Low Risk</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Confirm board composition and independent director requirements. Validate that the fund's compliance program under Rule 38a-1 addresses ESG-specific monitoring obligations.</div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">3. What FINRA suitability and Reg BI obligations apply to distribution?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-yellow">Answered</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">Broker-dealer distribution channels trigger FINRA Rule 2111 suitability and SEC Regulation Best Interest. Advisors must understand and accurately represent both the geographic risk profile (currency, political, and liquidity risk of emerging markets) and the ESG methodology. Suitability profile documentation and advisor training materials are in development. Form CRS disclosures must be prepared and conflict of interest documentation completed before retail distribution commences.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">Suitability requirements are well-understood but training materials and Form CRS disclosures have not yet been finalized. Distribution cannot commence until these are complete.</div>
+            <span class="badge badge-yellow">Medium Risk</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Flag completion of suitability profile and advisor training materials as a condition for Stage 2 advancement. Ensure Reg BI conflict disclosure documentation is reviewed by compliance before distribution.</div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">4. Are there any state-level Blue Sky filing requirements?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-yellow">Answered</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">ETF shares are covered securities under NSMIA and are exempt from state registration. However, notice filings and fees are required in states where the fund will be distributed. The initial target distribution states have not yet been confirmed. State-level ESG disclosure requirements should be monitored as an emerging area of regulation.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">Standard notice filing requirement; no current state prohibition. ESG-specific state requirements are an emerging risk warranting monitoring but not a near-term barrier.</div>
+            <span class="badge badge-yellow">Medium Risk</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Confirm target state distribution list and coordinate state notice filings. Establish a monitoring process for state-level ESG regulatory developments.</div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">5. Is there a prospectus and SAI drafting timeline in place?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-red">Needs Input</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">Not yet confirmed. The proposal does not include a defined prospectus and SAI drafting timeline with assigned counsel. Given the SEC's 75-day review period and the complexity of ESG disclosure requirements under the amended Names Rule, the absence of a drafting timeline creates scheduling risk for the target launch date. Lead counsel must be assigned and a drafting schedule established before Stage 2 advancement.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">No prospectus drafting timeline in place. Securities Act registration cannot proceed without a finalized prospectus. This gap creates scheduling risk for the target launch date.</div>
+            <span class="badge badge-red">High Risk — Information Gap</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Flag as a required condition for Stage 2. Assign lead counsel and establish a prospectus drafting timeline with milestone dates before committee submission.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Risk Management -->
+    <div class="team-group">
+      <div class="team-group-header">
+        <div class="team-group-name">Risk Management</div>
+        <div class="team-group-desc">Market, credit, liquidity, and counterparty risk controls</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">1. What liquidity risk controls apply to emerging markets exposure?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-red">Needs Input</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">Not yet addressed. Emerging markets securities can exhibit significantly lower liquidity than developed market equivalents, particularly during periods of market stress or geopolitical instability. The fund's liquidity risk management program under Rule 22e-4 must classify portfolio securities by liquidity bucket (highly liquid, moderately liquid, less liquid, illiquid) and establish a minimum highly liquid investment percentage. The current proposal does not include a liquidity risk management framework specific to the emerging markets mandate.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">Emerging markets liquidity risk is material and requires a defined Rule 22e-4 liquidity risk management program. This is an open gap that must be resolved before launch.</div>
+            <span class="badge badge-red">High Risk — Information Gap</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Require submission of a liquidity risk management framework addressing Rule 22e-4 requirements before Stage 2 advancement. Include stress testing scenarios reflecting emerging market-specific liquidity events.</div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">2. How is currency risk hedged or disclosed?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-yellow">Answered</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">The fund will not employ currency hedging strategies. All currency risk associated with emerging market holdings will be unhedged and borne by investors. This approach will be clearly disclosed in the prospectus risk factors section. The fund's benchmark index is calculated on an unhedged basis. The decision not to hedge is consistent with the fund's long-only, passive-style emerging markets mandate and avoids the derivatives complexity that would otherwise trigger CFTC commodity pool considerations.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">Currency risk policy is defined (unhedged) and consistent with the fund mandate. Clear prospectus disclosure is required. No derivative complexity introduced.</div>
+            <span class="badge badge-yellow">Medium Risk</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Ensure currency risk disclosure in the prospectus is prominent and specific to the emerging markets context. Include historical currency volatility data for key markets in the risk disclosure.</div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">3. Are counterparty concentration limits defined?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-red">Needs Input</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">Not yet defined. The fund will require relationships with emerging markets custodians, sub-custodians, and authorized participants. Counterparty concentration limits for sub-custodian relationships in higher-risk emerging market jurisdictions have not been established. Given the regulatory and settlement risk associated with emerging markets custody arrangements, this is a material gap. Counterparty risk limits must be defined and approved by Risk Management before any custody agreements are executed.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">Counterparty concentration limits for emerging markets custody are undefined. This is a fundamental risk control gap that must be resolved before trading commences.</div>
+            <span class="badge badge-red">High Risk — Information Gap</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Flag as a critical outstanding item. Risk Management must define and document counterparty concentration limits for sub-custodian relationships before Stage 2 committee submission.</div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">4. Is a stress testing framework in place for this product?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-green">Answered</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">Yes. Morgan Stanley's existing stress testing infrastructure will be extended to cover the MSESG ETF. Stress scenarios include emerging market contagion events (modeled on the 2013 Taper Tantrum and 2018 EM sell-off), currency crisis scenarios, and ESG-specific scenarios including a forced divestment scenario if a constituent fails ESG screens post-inclusion. Stress testing will be conducted quarterly and results reported to the fund's Risk Committee.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">Stress testing framework is in place and appropriately extended to cover emerging markets and ESG-specific scenarios. No incremental risk.</div>
+            <span class="badge badge-green">Low Risk</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Document the specific stress scenarios applicable to MSESG in the fund's risk management policy. Ensure ESG-specific divestment scenarios are tested before launch.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Operations -->
+    <div class="team-group">
+      <div class="team-group-header">
+        <div class="team-group-name">Operations</div>
+        <div class="team-group-desc">Trade capture, settlement, NAV calculation, and infrastructure readiness</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">1. Are trade capture and settlement workflows validated for emerging markets?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-yellow">Answered</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">Partially validated. Morgan Stanley's trade capture systems support emerging markets equities for existing funds. However, several target markets in the fund's index (Vietnam, Nigeria, Kazakhstan) involve non-standard settlement cycles (T+3 or longer) and require local broker arrangements not currently in place. Operations has identified these markets and is working with Custody to confirm settlement workflow readiness. Full validation is expected before Stage 2 committee submission.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">Core trade capture infrastructure is in place but non-standard settlement markets require validation. Timeline is manageable but must be confirmed before launch.</div>
+            <span class="badge badge-yellow">Medium Risk</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Require Operations to provide a market-by-market settlement validation checklist before Stage 2 committee submission. Flag Vietnam, Nigeria, and Kazakhstan as requiring local broker confirmation.</div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">2. Is the NAV calculation methodology documented and tested?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-green">Answered</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">Yes. The NAV calculation methodology has been documented, reviewed by Fund Accounting, and tested against three months of historical portfolio data. The methodology addresses multi-currency conversion using WM/Reuters 4pm London fixing rates, fair value pricing procedures for securities traded in time zones that close before the US market, and ESG data feed integration for ongoing constituent monitoring. The fair value pricing committee procedures are documented and consistent with existing Morgan Stanley fund practices.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">NAV methodology is documented and tested. Fair value pricing procedures are in place and consistent with existing fund practices.</div>
+            <span class="badge badge-green">Low Risk</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">No additional action required at this stage. Confirm NAV methodology is disclosed in the prospectus consistent with documentation.</div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">3. Are exception management and reconciliation processes in place?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-green">Answered</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">Yes. Morgan Stanley's standard fund operations exception management framework will apply to MSESG. Daily portfolio reconciliation between the fund accounting system and the custodian is performed. Break identification and resolution procedures are documented with escalation thresholds. The ESG data feed is reconciled weekly against the index provider's constituent file to identify any discrepancies in ESG scoring or constituent inclusion/exclusion.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">Exception management and reconciliation processes are in place. ESG data reconciliation procedure is a useful addition specific to this product.</div>
+            <span class="badge badge-green">Low Risk</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Document ESG data reconciliation procedure in the fund's operational procedures manual before launch.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compliance -->
+    <div class="team-group">
+      <div class="team-group-header">
+        <div class="team-group-name">Compliance</div>
+        <div class="team-group-desc">Regulatory filings, supervisory controls, and marketing review</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">1. Is a supervisory control framework documented for this product?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-yellow">Answered</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">A draft supervisory control framework has been prepared by Compliance. It covers trade surveillance, ESG mandate compliance monitoring, marketing material review, and periodic compliance testing. The framework identifies the applicable FINRA and SEC rules and assigns control ownership across Compliance, Risk, and Operations. The framework is in review and has not yet been formally approved. Sign-off is expected before Stage 2 committee submission.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">Framework is in draft and on track for approval. ESG-specific compliance monitoring is included. Formal sign-off required before distribution.</div>
+            <span class="badge badge-yellow">Medium Risk</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Require formal Compliance sign-off on the supervisory control framework as a condition for Stage 2 advancement. Ensure ESG mandate monitoring controls are specifically addressed.</div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">2. Have marketing materials been submitted for FINRA review?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-red">Needs Input</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">No. Marketing materials have not yet been drafted or submitted for FINRA review. No retail communications, fact sheets, or sales literature for the MSESG ETF have been produced. FINRA Rule 2210 requires that retail communications be reviewed by a registered principal before use and, for certain materials, filed with FINRA's Advertising Regulation Department. Distribution cannot commence until all marketing materials have been reviewed, approved, and where required, filed with FINRA. ESG performance claims and emerging markets risk disclosures require particular care.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">No marketing materials have been drafted or submitted. Distribution of unapproved materials constitutes a FINRA violation. This is an open gap that must be resolved before any distribution activity.</div>
+            <span class="badge badge-red">High Risk — Information Gap</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Flag as a required condition for Stage 2. Compliance must oversee drafting and FINRA submission of all retail communications before any distribution activity commences.</div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">3. Is an audit trail and recordkeeping framework in place?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-green">Answered</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">Yes. Morgan Stanley's existing fund recordkeeping infrastructure satisfies the Investment Company Act and SEC recordkeeping requirements applicable to the MSESG ETF. Records including fund accounting records, compliance files, board meeting minutes, marketing materials, and trade records will be retained in accordance with the applicable retention schedules. ESG methodology documentation and ongoing ESG scoring records will be specifically designated for retention as part of the fund's compliance file.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">Recordkeeping framework is in place. ESG documentation retention is specifically addressed, which is important given SEC examination focus on ESG fund practices.</div>
+            <span class="badge badge-green">Low Risk</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Confirm ESG methodology documentation and scoring records are specifically designated for retention in the compliance file before launch.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESG -->
+    <div class="team-group">
+      <div class="team-group-header">
+        <div class="team-group-name">ESG &amp; Sustainable Investing</div>
+        <div class="team-group-desc">ESG methodology, data sourcing, index construction, and greenwashing risk</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">1. Is the ESG methodology independently validated and documented?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-red">Needs Input</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">Not yet completed. The ESG methodology has been described at a high level in the product proposal but has not been fully documented in a methodology document suitable for prospectus disclosure, nor has it been independently validated. The methodology document must specify: the ESG data provider(s) used, the scoring framework and weighting methodology, sector and controversy exclusion criteria, the process for handling ESG rating disagreements across providers, and the annual methodology review process. Independent validation by a third party or Morgan Stanley's internal model validation team is required before SEC submission.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">ESG methodology documentation and independent validation are incomplete. This is the highest-priority outstanding item given SEC ESG disclosure requirements and greenwashing risk.</div>
+            <span class="badge badge-red">High Risk — Information Gap</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Flag as a critical outstanding item. Full methodology documentation and independent validation must be completed before SEC registration filing. This is a non-negotiable requirement.</div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">2. Are ESG data sources identified and conflicts of interest disclosed?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-yellow">Answered</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">Primary ESG data will be sourced from MSCI ESG Research, with SUSTAINALYTICS used as a secondary source for controversy screening. Both providers have been identified and preliminary data access agreements are in place. Morgan Stanley does not have a controlling ownership interest in either provider. Potential conflicts of interest arising from the relationship with MSCI (given Morgan Stanley's investment banking relationships) have been reviewed by Compliance and will be disclosed in the prospectus. A conflict of interest policy for ESG data sourcing decisions is in draft.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">ESG data sources are identified. Potential MSCI conflict of interest has been identified and is being managed. Conflict disclosure in prospectus is required.</div>
+            <span class="badge badge-yellow">Medium Risk</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Finalize conflict of interest policy for ESG data sourcing and ensure MSCI relationship conflict is disclosed in the prospectus. Confirm data access agreements are finalized before SEC filing.</div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">3. Has a greenwashing risk assessment been completed?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-yellow">Answered</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">A preliminary greenwashing risk assessment has been conducted by the ESG &amp; Sustainable Investing team. Key risks identified include: (1) ESG data divergence between MSCI and Sustainalytics for emerging market issuers with limited disclosure; (2) potential for constituent companies to score well on ESG metrics while operating in controversial sectors not covered by the exclusion screens; (3) marketing language risk — the term "ESG ETF" may create investor expectations not fully satisfied by the fund's actual screening methodology. Mitigants are in place for risks 1 and 3; risk 2 requires additional review before the assessment is finalized.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">Preliminary greenwashing risk assessment completed. Key risks identified; mitigants partially in place. Assessment must be finalized before SEC registration filing.</div>
+            <span class="badge badge-yellow">Medium Risk</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Finalize greenwashing risk assessment addressing the residual risk around controversial sector exposure. Ensure marketing language review is included in the FINRA Rule 2210 review process.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Governance -->
+    <div class="team-group">
+      <div class="team-group-header">
+        <div class="team-group-name">Product Governance</div>
+        <div class="team-group-desc">Target market definition, distributor suitability, and product complexity disclosure</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">1. Is a target market assessment completed and documented?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-green">Answered</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">Yes. A target market assessment has been completed and documented. The fund is designated for retail and institutional investors with a long-term investment horizon (5+ years), a moderate-to-high risk tolerance, the ability to bear losses, and an interest in ESG-aligned investing. The fund is not suitable for investors requiring capital preservation or short-term liquidity. The target market assessment is consistent with Morgan Stanley's Reg BI best interest obligations and has been reviewed by Compliance.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">Target market assessment is complete and Reg BI-consistent. No incremental risk.</div>
+            <span class="badge badge-green">Low Risk</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Ensure target market assessment is reflected in distributor guidance documentation and Form CRS disclosures.</div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">2. Are distributor suitability criteria defined and communicated?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-yellow">Answered</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">Distributor suitability criteria have been drafted and are under review. The criteria specify minimum knowledge and experience requirements for advisors distributing the fund, required disclosures to retail investors, and restrictions on distribution to investors who do not meet the target market criteria. Distribution will initially be limited to Morgan Stanley's internal broker-dealer network. Third-party distributor onboarding criteria will be finalized before any external distribution commences.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">Distributor suitability criteria are in draft. Internal distribution criteria are workable; third-party criteria require finalization before external distribution.</div>
+            <span class="badge badge-yellow">Medium Risk</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Finalize distributor suitability criteria and advisor training requirements before any distribution activity. Third-party distributor criteria must be formally approved before external distribution commences.</div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-item-header" onclick="toggleQA(this)">
+          <span class="qa-question">3. Is a product complexity disclosure drafted?</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-red">Needs Input</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-label">Response</div>
+          <div class="qa-response">Not yet drafted. A product complexity disclosure document summarizing the key risks, the ESG methodology, emerging markets exposure, and suitability considerations for distributors has not been prepared. Product Governance requires this document before distributor onboarding can commence. The disclosure should be consistent with the prospectus risk factor disclosure and should be written at an appropriate level for financial advisors, not just institutional audiences.</div>
+          <div class="qa-label">Risk Assessment</div>
+          <div class="qa-risk-row">
+            <div class="qa-risk-text">Product complexity disclosure not drafted. Required before distributor onboarding can commence.</div>
+            <span class="badge badge-red">High Risk — Information Gap</span>
+          </div>
+          <div class="qa-label">Team Notes</div>
+          <div class="qa-response">Flag as a required condition for Stage 2. Product Governance must draft and obtain sign-off on the product complexity disclosure before distributor onboarding commences.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div><!-- end tab-team-review -->
+
+  <!-- TAB: OUTSTANDING ITEMS -->
+  <div id="tab-outstanding" class="tab-content" style="display:none;">
+  <div class="section">
+    <div class="outstanding-header">
+      <div class="section-title">Outstanding Items</div>
+      <span class="badge badge-red" id="open-count-badge">6 Open</span>
+    </div>
+    <div class="section-subtitle">Items requiring resolution before Stage 3. Resolving all Critical items will unlock the Approve action.</div>
+
+    <!-- Item 1 - Critical -->
+    <div class="outstanding-item critical" id="oi-0">
+      <div class="outstanding-item-top">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" id="check-0" onchange="handleCheck(0)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--green);">
+          <span class="badge badge-red">Critical</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--text-muted);">Due: Stage 3 — Before Committee Submission</span>
+          <button onclick="showRouteModal('ESG &amp; Sustainable Investing', 'Complete ESG methodology documentation and independent validation')" class="btn btn-request" style="font-size:11px;padding:4px 10px;">↗ Route to Owner</button>
+        </div>
+      </div>
+      <div class="outstanding-item-desc">Provide complete ESG methodology documentation including data sources (MSCI, Sustainalytics), index construction rules, scoring framework, exclusion criteria, and independent validation evidence.</div>
+      <div class="outstanding-item-meta"><strong>Why This Matters:</strong> SEC Names Rule and ESG disclosure requirements mandate full methodology transparency. Cannot proceed to SEC registration filing without this documentation.</div>
+      <div class="outstanding-item-meta"><strong>Owner:</strong> ESG &amp; Sustainable Investing</div>
+    </div>
+
+    <!-- Item 2 - Critical -->
+    <div class="outstanding-item critical" id="oi-1">
+      <div class="outstanding-item-top">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" id="check-1" onchange="handleCheck(1)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--green);">
+          <span class="badge badge-red">Critical</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--text-muted);">Due: Stage 3 — Before Committee Submission</span>
+          <button onclick="showRouteModal('Risk Management', 'Define counterparty concentration limits for emerging markets sub-custodian relationships')" class="btn btn-request" style="font-size:11px;padding:4px 10px;">↗ Route to Owner</button>
+        </div>
+      </div>
+      <div class="outstanding-item-desc">Define and document counterparty concentration limits for emerging markets sub-custodian relationships. Obtain Risk Management approval before any custody agreements are executed.</div>
+      <div class="outstanding-item-meta"><strong>Why This Matters:</strong> Unresolved counterparty concentration risk is a fundamental control gap. Required before trading in emerging markets can commence.</div>
+      <div class="outstanding-item-meta"><strong>Owner:</strong> Risk Management</div>
+    </div>
+
+    <!-- Item 3 - High -->
+    <div class="outstanding-item high" id="oi-2">
+      <div class="outstanding-item-top">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" id="check-2" onchange="handleCheck(2)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--green);">
+          <span class="badge badge-orange">High</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--text-muted);">Due: Stage 3 — Before Distribution</span>
+          <button onclick="showRouteModal('Compliance', 'Draft and submit all retail marketing materials for FINRA Rule 2210 review')" class="btn btn-request" style="font-size:11px;padding:4px 10px;">↗ Route to Owner</button>
+        </div>
+      </div>
+      <div class="outstanding-item-desc">Draft all retail marketing and sales materials and submit for FINRA Rule 2210 review. Obtain written Compliance approval before any distribution activity commences.</div>
+      <div class="outstanding-item-meta"><strong>Why This Matters:</strong> Distribution of unapproved marketing materials constitutes a FINRA rule violation. ESG claims require particular care to avoid greenwashing characterization.</div>
+      <div class="outstanding-item-meta"><strong>Owner:</strong> Compliance</div>
+    </div>
+
+    <!-- Item 4 - High -->
+    <div class="outstanding-item high" id="oi-3">
+      <div class="outstanding-item-top">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" id="check-3" onchange="handleCheck(3)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--green);">
+          <span class="badge badge-orange">High</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--text-muted);">Due: Stage 3 — Before Committee Submission</span>
+          <button onclick="showRouteModal('Legal &amp; Regulatory', 'Assign lead counsel and establish prospectus and SAI drafting timeline')" class="btn btn-request" style="font-size:11px;padding:4px 10px;">↗ Route to Owner</button>
+        </div>
+      </div>
+      <div class="outstanding-item-desc">Assign lead counsel and establish a prospectus and SAI drafting timeline with milestone dates. Confirm timeline is consistent with target launch date given SEC's 75-day review period.</div>
+      <div class="outstanding-item-meta"><strong>Why This Matters:</strong> Securities Act registration cannot proceed without a finalized prospectus. Absence of a drafting timeline creates scheduling risk for the target launch date.</div>
+      <div class="outstanding-item-meta"><strong>Owner:</strong> Legal &amp; Regulatory</div>
+    </div>
+
+    <!-- Item 5 - High -->
+    <div class="outstanding-item high" id="oi-4">
+      <div class="outstanding-item-top">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" id="check-4" onchange="handleCheck(4)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--green);">
+          <span class="badge badge-orange">High</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--text-muted);">Due: Stage 3 — Before Launch</span>
+          <button onclick="showRouteModal('Risk Management', 'Submit liquidity risk management framework addressing SEC Rule 22e-4 requirements')" class="btn btn-request" style="font-size:11px;padding:4px 10px;">↗ Route to Owner</button>
+        </div>
+      </div>
+      <div class="outstanding-item-desc">Submit a liquidity risk management framework addressing SEC Rule 22e-4 requirements for the emerging markets mandate, including liquidity bucket classifications and minimum highly liquid investment percentage.</div>
+      <div class="outstanding-item-meta"><strong>Why This Matters:</strong> Emerging markets liquidity risk is material and Rule 22e-4 compliance is mandatory for registered investment companies.</div>
+      <div class="outstanding-item-meta"><strong>Owner:</strong> Risk Management</div>
+    </div>
+
+    <!-- Item 6 - Medium -->
+    <div class="outstanding-item medium" id="oi-5">
+      <div class="outstanding-item-top">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" id="check-5" onchange="handleCheck(5)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--green);">
+          <span class="badge badge-yellow">Medium</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--text-muted);">Due: Stage 3 — Scope Confirmation</span>
+          <button onclick="showRouteModal('Product Governance', 'Draft product complexity disclosure document for distributor communications')" class="btn btn-request" style="font-size:11px;padding:4px 10px;">↗ Route to Owner</button>
+        </div>
+      </div>
+      <div class="outstanding-item-desc">Draft and obtain Product Governance sign-off on the product complexity disclosure document for use in distributor communications and advisor training materials.</div>
+      <div class="outstanding-item-meta"><strong>Why This Matters:</strong> Product Governance sign-off on the complexity disclosure is required before distributor onboarding commences.</div>
+      <div class="outstanding-item-meta"><strong>Owner:</strong> Product Governance</div>
+    </div>
+
+  </div>
+  </div><!-- end tab-outstanding -->
+
+  <!-- ROUTE TO OWNER MODAL -->
+  <div id="route-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:var(--surface); border-radius:12px; padding:24px; width:380px; box-shadow:0 8px 32px rgba(0,0,0,0.16);">
+      <div style="font-size:15px; font-weight:600; margin-bottom:4px;">Route to Owner</div>
+      <div style="font-size:12px; color:var(--text-secondary); margin-bottom:16px;">This item will be assigned and a notification sent to the owner.</div>
+      <div style="margin-bottom:12px;">
+        <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:4px;">Owner</div>
+        <div id="modal-owner" style="font-size:13px; font-weight:500; padding:8px 12px; background:var(--bg); border-radius:6px; border:1px solid var(--border);"></div>
+      </div>
+      <div style="margin-bottom:20px;">
+        <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:4px;">Action Required</div>
+        <div id="modal-action" style="font-size:12px; color:var(--text-secondary); padding:8px 12px; background:var(--bg); border-radius:6px; border:1px solid var(--border); line-height:1.5;"></div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:4px;">Note (optional)</div>
+        <input type="text" placeholder="Add a note for the owner..." style="width:100%; padding:8px 12px; border:1px solid var(--border); border-radius:6px; font-size:12px; font-family:'IBM Plex Sans',sans-serif; outline:none; color:var(--text-primary);">
+      </div>
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button onclick="closeRouteModal()" class="btn btn-request">Cancel</button>
+        <button onclick="confirmRoute()" class="btn btn-approve">Send Notification</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- RIGHT SIDEBAR -->
+<div class="sidebar-wrapper">
+  <div class="sidebar-content">
+    <div class="sidebar-header">
+      <div class="sidebar-title">Review</div>
+      <div class="sidebar-count">1–5 of 5</div>
+      <div class="sidebar-pagination">
+        <div class="page-num">1</div>
+        <button class="page-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 4l-4 4 4 4"/></svg></button>
+        <button class="page-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4l4 4-4 4"/></svg></button>
+      </div>
+    </div>
+
+    <!-- Review Items with inline dropdown panels -->
+    <div id="review-list">
+
+      <!-- Item 0 -->
+      <div class="review-item" onclick="toggleReviewItem(0, this)">
+        <div class="review-item-header">
+          <div class="review-icon"><svg viewBox="0 0 16 16" fill="white"><path d="M8 2a6 6 0 100 12A6 6 0 008 2z" fill="white" opacity=".8"/></svg></div>
+          <div class="review-item-name">Securities Registration &amp; Regulatory Scoping (Legal)</div>
+          <svg class="chevron" style="flex-shrink:0;margin-left:4px;" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+        <div class="review-item-footer">
+          <span class="badge badge-yellow">Needs Action</span>
+          <span class="comment-count"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12v8H9l-3 3v-3H2z"/></svg> 0</span>
+        </div>
+      </div>
+      <div id="review-panel-0" class="review-panel" style="border-top:1px solid var(--border-light);border-bottom:1px solid var(--border);">
+      <div class="review-action-items">
+        <div class="review-action-title">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+          Action Items
+        </div>
+        <ul class="review-action-list">
+          <li>File Form N-1A registration statement with the SEC before any public offering. Assign lead counsel and establish a drafting timeline consistent with the target launch date and SEC's 75-day review period.</li>
+          <li>Register the fund as an open-end management investment company under the Investment Company Act of 1940. Confirm board composition and Rule 38a-1 compliance program requirements.</li>
+          <li>Prepare FINRA suitability profile and advisor training materials covering emerging markets risk and ESG methodology before any distribution activity commences.</li>
+          <li>Confirm initial target state distribution list and coordinate state Blue Sky notice filings before distribution in each state.</li>
+          <li>Establish a lifecycle trigger requiring re-run of this regulatory analysis if the fund's investment strategy, distribution scope, or use of derivatives changes materially.</li>
+        </ul>
+      </div>
+      <div class="review-explanation">
+        <div class="review-explanation-header" onclick="toggleExplanation(this)">
+          <div class="review-explanation-title">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+            Explanation
+          </div>
+          <svg class="chevron open" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+        <div class="review-explanation-body">
+          <p><strong>Securities Act of 1933:</strong> The ETF's shares are securities and require full registration on Form N-1A before any public offering. No exemption is available. The registration process is standard and well-understood within Morgan Stanley's existing fund infrastructure. The primary open item is the absence of a defined drafting timeline and assigned lead counsel, which creates scheduling risk for the target launch date.</p>
+          <p><strong>Investment Company Act of 1940:</strong> The fund qualifies as an investment company and must register as an open-end management company. Morgan Stanley's existing compliance program substantially satisfies the ongoing requirements. Board composition, custody arrangements, and Rule 38a-1 compliance program validation are required incremental steps.</p>
+          <p><strong>FINRA Suitability &amp; Reg BI:</strong> Broker-dealer distribution triggers suitability and best interest obligations. The emerging markets and ESG mandate introduces complexity for advisor suitability analysis. Training materials and Form CRS disclosures must be prepared before distribution commences. These are operational requirements that do not block launch but must be on the critical path.</p>
+          <p><strong>State Blue Sky Laws:</strong> The ETF's shares are covered securities exempt from state registration. Notice filings and fees are required in target distribution states. No current state prohibition applies. Ongoing monitoring of state-level ESG regulatory developments is recommended.</p>
+        </div>
+      </div>
+      <div class="review-comments">
+        <div class="review-comments-header">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12v8H9l-3 3v-3H2z"/></svg>
+          Comments (0)
+        </div>
+        <div class="review-comments-input">
+          <input type="text" placeholder="Message other Norm users">
+          <button><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M9 4l5 4-5 4"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+      <!-- Item 1 -->
+      <div class="review-item" onclick="toggleReviewItem(1, this)">
+        <div class="review-item-header">
+          <div class="review-icon"></div>
+          <div class="review-item-name">ESG Disclosure &amp; Greenwashing Risk Framework (ESG)</div>
+          <svg class="chevron" style="flex-shrink:0;margin-left:4px;" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+        <div class="review-item-footer">
+          <span class="badge badge-yellow">Needs Action</span>
+          <span class="comment-count"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12v8H9l-3 3v-3H2z"/></svg> 0</span>
+        </div>
+      </div>
+    <div id="review-panel-1" class="review-panel" style="border-top:1px solid var(--border);">
+      <div class="review-action-items">
+        <div class="review-action-title">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+          Action Items
+        </div>
+        <ul class="review-action-list">
+          <li>Complete and finalize the ESG methodology document specifying data providers (MSCI, Sustainalytics), scoring framework, weighting methodology, exclusion criteria, and the process for handling rating disagreements across providers.</li>
+          <li>Conduct independent validation of the ESG methodology through Morgan Stanley's internal model validation team or a qualified third party before SEC registration filing.</li>
+          <li>Finalize and document the greenwashing risk assessment addressing residual risks from controversial sector exposure and ESG data divergence for emerging market issuers.</li>
+          <li>Ensure all marketing language referring to ESG characteristics is reviewed in the FINRA Rule 2210 process specifically for greenwashing risk — performance claims and comparative ESG statements require particular scrutiny.</li>
+          <li>Establish an annual ESG methodology review process and document the trigger conditions requiring an interim review (e.g., material change in data provider methodology, significant regulatory development).</li>
+        </ul>
+      </div>
+      <div class="review-explanation">
+        <div class="review-explanation-header" onclick="toggleExplanation(this)">
+          <div class="review-explanation-title">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+            Explanation
+          </div>
+          <svg class="chevron open" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+        <div class="review-explanation-body">
+          <p><strong>Why ESG Disclosure Is the Highest-Priority Item:</strong> The SEC's amended Names Rule requires that 80% of the fund's assets be invested consistently with the ESG focus suggested by the fund name. SEC enforcement activity has focused on ESG funds that lack documented, consistently-applied methodologies. An incomplete or inadequately validated methodology creates regulatory, reputational, and litigation risk that cannot be managed through disclosure alone.</p>
+          <p><strong>Greenwashing Risk:</strong> The combination of an ESG label, emerging markets exposure, and reliance on third-party ESG data creates specific greenwashing risk vectors. Emerging market issuers often have lower ESG disclosure quality, meaning ESG scores may reflect data gaps rather than genuine ESG performance. The fund's methodology must address how it handles low-disclosure issuers and what the minimum data quality threshold is for inclusion.</p>
+          <p><strong>Data Provider Conflict:</strong> The potential conflict arising from Morgan Stanley's investment banking relationships with MSCI is a real risk that must be proactively managed. The conflict disclosure in the prospectus must be specific and must describe the controls in place to ensure ESG data decisions are not influenced by the banking relationship.</p>
+          <p><strong>Scope Dependency:</strong> This analysis applies to the fund as currently scoped — an ESG-screened emerging markets equity fund using MSCI and Sustainalytics data. Any expansion to include additional ESG strategies, impact investing components, or thematic overlays requires re-review of the ESG methodology and disclosure framework.</p>
+        </div>
+      </div>
+      <div class="review-comments">
+        <div class="review-comments-header">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12v8H9l-3 3v-3H2z"/></svg>
+          Comments (0)
+        </div>
+        <div class="review-comments-input">
+          <input type="text" placeholder="Message other Norm users">
+          <button><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M9 4l5 4-5 4"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+      <!-- Item 2 -->
+      <div class="review-item" onclick="toggleReviewItem(2, this)">
+        <div class="review-item-header">
+          <div class="review-icon"></div>
+          <div class="review-item-name">Counterparty &amp; Liquidity Risk Controls (Risk Management)</div>
+          <svg class="chevron" style="flex-shrink:0;margin-left:4px;" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+        <div class="review-item-footer">
+          <span class="badge badge-yellow">Needs Action</span>
+          <span class="comment-count"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12v8H9l-3 3v-3H2z"/></svg> 0</span>
+        </div>
+      </div>
+    <div id="review-panel-2" class="review-panel" style="border-top:1px solid var(--border);">
+      <div class="review-action-items">
+        <div class="review-action-title">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+          Action Items
+        </div>
+        <ul class="review-action-list">
+          <li>Define and document counterparty concentration limits for emerging markets sub-custodian relationships, with specific limits for higher-risk jurisdictions. Obtain formal Risk Management approval before any custody agreements are executed.</li>
+          <li>Submit a liquidity risk management framework addressing SEC Rule 22e-4 requirements, including liquidity bucket classifications, minimum highly liquid investment percentage, and stress testing methodology specific to emerging markets.</li>
+          <li>Confirm settlement workflow readiness for non-standard settlement markets (Vietnam, Nigeria, Kazakhstan) including local broker arrangements and T+3 settlement cycle procedures.</li>
+          <li>Document currency risk policy (unhedged) in the prospectus risk factors section with specific reference to historical emerging market currency volatility.</li>
+        </ul>
+      </div>
+      <div class="review-explanation">
+        <div class="review-explanation-header" onclick="toggleExplanation(this)">
+          <div class="review-explanation-title">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+            Explanation
+          </div>
+          <svg class="chevron open" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+        <div class="review-explanation-body">
+          <p><strong>Counterparty Risk — Critical Gap:</strong> Emerging markets custody involves sub-custodian relationships in jurisdictions where legal protections for fund assets may be weaker than in developed markets. Counterparty concentration limits for sub-custodian relationships are a fundamental risk control requirement. Without defined limits, the fund cannot evidence that its counterparty risk is adequately managed, which is a prerequisite for the NPA committee's risk acceptance.</p>
+          <p><strong>Liquidity Risk — Rule 22e-4:</strong> SEC Rule 22e-4 requires registered funds to implement a liquidity risk management program that includes classification of portfolio assets into four liquidity buckets, designation of a minimum highly liquid investment percentage, and board oversight. Emerging markets equities present specific liquidity challenges — many constituents trade in markets with limited daily volume and extended settlement cycles. The liquidity risk management program must be tailored to the emerging markets mandate and cannot simply replicate the approach used for developed market funds.</p>
+          <p><strong>Settlement Risk:</strong> Several target markets in the fund's index involve non-standard settlement procedures. Vietnam operates a T+2.5 settlement cycle with specific local broker requirements. Nigeria and Kazakhstan involve local custody arrangements that must be pre-established before trading commences. Operations has identified these markets; validation of the settlement workflow must be completed and documented before the committee submission.</p>
+        </div>
+      </div>
+      <div class="review-comments">
+        <div class="review-comments-header">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12v8H9l-3 3v-3H2z"/></svg>
+          Comments (0)
+        </div>
+        <div class="review-comments-input">
+          <input type="text" placeholder="Message other Norm users">
+          <button><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M9 4l5 4-5 4"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+      <!-- Item 3 -->
+      <div class="review-item" onclick="toggleReviewItem(3, this)">
+        <div class="review-item-header">
+          <div class="review-icon"></div>
+          <div class="review-item-name">Marketing &amp; Supervisory Controls (Compliance)</div>
+          <svg class="chevron" style="flex-shrink:0;margin-left:4px;" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+        <div class="review-item-footer">
+          <span class="badge badge-yellow">Needs Action</span>
+          <span class="comment-count"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12v8H9l-3 3v-3H2z"/></svg> 0</span>
+        </div>
+      </div>
+    <div id="review-panel-3" class="review-panel" style="border-top:1px solid var(--border);">
+      <div class="review-action-items">
+        <div class="review-action-title">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+          Action Items
+        </div>
+        <ul class="review-action-list">
+          <li>Draft all retail marketing and sales materials for the MSESG ETF and submit for FINRA Rule 2210 review. Obtain registered principal approval and, where required, file with FINRA's Advertising Regulation Department before any distribution activity.</li>
+          <li>Obtain formal Compliance sign-off on the supervisory control framework before Stage 2 committee submission. Confirm ESG mandate monitoring controls are specifically addressed.</li>
+          <li>Draft and implement a pre-distribution checklist confirming that all marketing materials have been approved, FINRA filings are current, and advisor training is complete before any investor-facing activity commences.</li>
+          <li>Document the recordkeeping framework for ESG methodology documentation and scoring records in the fund's compliance file before launch.</li>
+        </ul>
+      </div>
+      <div class="review-explanation">
+        <div class="review-explanation-header" onclick="toggleExplanation(this)">
+          <div class="review-explanation-title">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+            Explanation
+          </div>
+          <svg class="chevron open" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+        <div class="review-explanation-body">
+          <p><strong>Why Marketing Controls Are Critical for an ESG Product:</strong> ESG-labeled investment products are subject to heightened regulatory scrutiny of marketing claims. The SEC and FINRA have both signaled that performance representations and ESG characterizations in marketing materials are a priority examination area. Any statement that overstates the fund's ESG credentials, understates risks, or implies a level of impact investing that the fund's strategy does not support creates regulatory and litigation exposure.</p>
+          <p><strong>FINRA Rule 2210 Requirements:</strong> All retail communications must be approved by a registered principal before use. Certain materials must be filed with FINRA's Advertising Regulation Department. The MSESG ETF's marketing materials have not yet been drafted, which means no distribution activity can commence until this process is completed. The process typically takes 4-6 weeks for a new fund launch.</p>
+          <p><strong>Supervisory Control Framework:</strong> The draft supervisory control framework is on track for approval but has not yet been formally signed off by Compliance. The framework must specifically address ESG mandate compliance monitoring — including how the fund confirms that portfolio holdings continue to meet ESG criteria after inclusion — in addition to standard trade surveillance and marketing review controls.</p>
+        </div>
+      </div>
+      <div class="review-comments">
+        <div class="review-comments-header">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12v8H9l-3 3v-3H2z"/></svg>
+          Comments (0)
+        </div>
+        <div class="review-comments-input">
+          <input type="text" placeholder="Message other Norm users">
+          <button><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M9 4l5 4-5 4"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+      <!-- Item 4 -->
+      <div class="review-item" onclick="toggleReviewItem(4, this)">
+        <div class="review-item-header">
+          <div class="review-icon"></div>
+          <div class="review-item-name">Recommended Decision</div>
+          <svg class="chevron" style="flex-shrink:0;margin-left:4px;" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+        <div class="review-item-footer">
+          <span class="badge badge-blue">Approve with Conditions</span>
+          <span class="comment-count"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12v8H9l-3 3v-3H2z"/></svg> 0</span>
+        </div>
+      </div>
+    <div id="review-panel-4" class="review-panel" style="border-top:1px solid var(--border);">
+      <div class="review-action-items">
+        <div class="review-action-title">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+          Action Items
+        </div>
+        <ul class="review-action-list">
+          <li>Recommendation: APPROVE WITH CONDITIONS. Recommending advancement to Stage 3 (Operational Readiness) pending resolution of outstanding items. Final approval authority rests with the NPA Committee.</li>
+          <li>Six condition packages must be satisfied before Stage 2 committee submission: Legal (prospectus timeline and counsel assignment), ESG (methodology documentation and independent validation), Risk Management (counterparty limits and liquidity framework), Compliance (marketing materials and supervisory framework sign-off), Operations (settlement workflow validation), and Product Governance (complexity disclosure).</li>
+        </ul>
+      </div>
+      <div class="review-explanation">
+        <div class="review-explanation-header" onclick="toggleExplanation(this)">
+          <div class="review-explanation-title">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+            Explanation
+          </div>
+          <svg class="chevron open" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+        <div class="review-explanation-body">
+          <p><strong>Why Norm Ai Recommends Approval:</strong> The MS Emerging Markets ESG ETF is aligned with Morgan Stanley Investment Management's strategic objective of expanding its sustainable investing product range. The regulatory analysis is favorable: the fund is a standard registered ETF with well-understood registration requirements, no CFTC commodity pool obligations, and no current state-level prohibition on distribution. Morgan Stanley's existing investment management infrastructure substantially supports the fund's operational requirements. No regulatory framework currently prohibits this product.</p>
+          <p><strong>Why Conditions Are Required:</strong> The open items are operational, not fundamental regulatory barriers. The ESG methodology documentation and independent validation must be completed because SEC disclosure requirements are non-negotiable and greenwashing risk is material for this product type. The counterparty concentration limits and liquidity risk management framework are fundamental risk controls required before trading can commence. The marketing materials and supervisory framework must be in place before any distribution activity. These conditions are achievable and do not require changes to the product's fundamental design.</p>
+          <p><strong>Scope Dependency:</strong> This approval is predicated on the current scope of the product: an ESG-screened emerging markets equity ETF using MSCI and Sustainalytics data, distributed through Morgan Stanley's broker-dealer network, without derivatives exposure above the CFTC de minimis threshold. Any material expansion — to include derivatives, impact investing components, additional distribution channels, or a change in ESG data providers — requires re-review before implementation in the expanded scope.</p>
+        </div>
+      </div>
+      <div class="review-comments">
+        <div class="review-comments-header">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12v8H9l-3 3v-3H2z"/></svg>
+          Comments (0)
+        </div>
+        <div class="review-comments-input">
+          <input type="text" placeholder="Message other Norm users">
+          <button><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M9 4l5 4-5 4"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    </div><!-- end review-list -->
+
+  </div>
+
+  <!-- SIDEBAR TAB BUTTONS -->
+  <div style="display:flex;flex-direction:column;width:44px;border-left:1px solid var(--border);background:var(--surface);">
+    <button class="sidebar-tab-btn active" title="Review">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12v8H9l-3 3v-3H2z"/></svg>
+      Review
+    </button>
+    <button class="sidebar-tab-btn" title="Approvals">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="3"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg>
+      Approvals
+    </button>
+    <button class="sidebar-tab-btn" title="Audit Log">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="2" width="10" height="12" rx="1"/><path d="M6 6h4M6 9h4M6 12h2"/></svg>
+      Audit Log
+    </button>
+    <button class="sidebar-tab-btn" title="Documents">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2h6l3 3v9H4z"/><path d="M10 2v3h3"/></svg>
+      Documents
+    </button>
+  </div>
+</div>
+
+<script>
+  function toggleReg(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.chevron');
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    chevron.classList.toggle('open', !isOpen);
+  }
+
+  function toggleQA(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.chevron');
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    chevron.classList.toggle('open', !isOpen);
+  }
+
+  function toggleExplanation(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.chevron');
+    const isOpen = body.style.display !== 'none';
+    body.style.display = isOpen ? 'none' : 'block';
+    chevron.classList.toggle('open', !isOpen);
+  }
+
+  function toggleReviewItem(index, item) {
+    const panel = document.getElementById('review-panel-' + index);
+    const chevron = item.querySelector('.chevron');
+    const isOpen = panel.classList.contains('active');
+    document.querySelectorAll('.review-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.review-item').forEach(i => {
+      i.classList.remove('active');
+      const c = i.querySelector('.chevron');
+      if (c) c.classList.remove('open');
+    });
+    if (!isOpen) {
+      panel.classList.add('active');
+      item.classList.add('active');
+      if (chevron) chevron.classList.add('open');
+    }
+  }
+
+  // TAB NAVIGATION
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tabId).style.display = 'block';
+    // Intake and Team Review are combined
+    if (tabId === 'intake') {
+      document.getElementById('tab-team-review').style.display = 'block';
+    }
+    btn.classList.add('active');
+  }
+
+  // STAGE DROPDOWN
+  function toggleStageDropdown() {
+    const dd = document.getElementById('stage-dropdown');
+    const chevron = document.getElementById('stage-chevron');
+    const isOpen = dd.style.display !== 'none';
+    dd.style.display = isOpen ? 'none' : 'block';
+    chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+  }
+  document.addEventListener('click', function(e) {
+    if (!document.getElementById('stage-badge').contains(e.target)) {
+      document.getElementById('stage-dropdown').style.display = 'none';
+      document.getElementById('stage-chevron').style.transform = '';
+    }
+  });
+
+  // ASSESSMENT TOGGLE
+  function toggleAssessment() {
+    const body = document.getElementById('assessment-body');
+    const chevron = document.getElementById('assessment-chevron');
+    const isOpen = body.style.display !== 'none';
+    body.style.display = isOpen ? 'none' : 'block';
+    chevron.classList.toggle('open', !isOpen);
+  }
+
+  // OUTSTANDING ITEMS CHECKLIST + GATING
+  const criticalItems = [0, 1]; // indices of critical items
+  let checkedItems = new Set();
+
+  function handleCheck(index) {
+    const cb = document.getElementById('check-' + index);
+    const item = document.getElementById('oi-' + index);
+    if (cb.checked) {
+      checkedItems.add(index);
+      item.style.opacity = '0.5';
+      item.style.textDecoration = 'none';
+    } else {
+      checkedItems.delete(index);
+      item.style.opacity = '1';
+    }
+    const openCount = 6 - checkedItems.size;
+    document.getElementById('open-count-badge').textContent = openCount + ' Open';
+    document.getElementById('outstanding-count').textContent = openCount;
+
+    // Check if all critical items are resolved
+    const allCriticalResolved = criticalItems.every(i => checkedItems.has(i));
+    const approveBtn = document.getElementById('btn-approve');
+    const lockMsg = document.getElementById('action-lock-msg');
+    if (allCriticalResolved) {
+      approveBtn.disabled = false;
+      approveBtn.style.opacity = '1';
+      approveBtn.style.cursor = 'pointer';
+      lockMsg.textContent = '✓ Critical items resolved — approval available';
+      lockMsg.style.color = 'var(--green)';
+    } else {
+      const remaining = criticalItems.filter(i => !checkedItems.has(i)).length;
+      approveBtn.disabled = true;
+      approveBtn.style.opacity = '0.4';
+      approveBtn.style.cursor = 'not-allowed';
+      lockMsg.textContent = '🔒 ' + remaining + ' critical item' + (remaining > 1 ? 's' : '') + ' must be resolved to approve';
+      lockMsg.style.color = 'var(--text-muted)';
+    }
+  }
+
+  // ROUTE TO OWNER MODAL
+  function showRouteModal(owner, action) {
+    document.getElementById('modal-owner').textContent = owner;
+    document.getElementById('modal-action').textContent = action;
+    document.getElementById('route-modal').style.display = 'flex';
+  }
+  function closeRouteModal() {
+    document.getElementById('route-modal').style.display = 'none';
+  }
+  function confirmRoute() {
+    closeRouteModal();
+    alert('Notification sent to owner. They will receive an email with the action item details.');
+  }
+
+  // ACTION BUTTONS
+  document.getElementById('btn-escalate').addEventListener('click', () => alert('Escalated to senior committee. This would trigger a notification and update the NPA status.'));
+  document.getElementById('btn-reject').addEventListener('click', () => alert('Product rejected. This would close the NPA and notify stakeholders.'));
+  document.getElementById('btn-request').addEventListener('click', () => alert('Info request sent. The submitting team will be notified to provide additional information.'));
+  document.getElementById('btn-approve').addEventListener('click', function() {
+    if (!this.disabled) alert('Product approved with conditions. Advancing to Stage 3 — Operational Readiness.');
+  });
+</script>
+</body>
+</html>
